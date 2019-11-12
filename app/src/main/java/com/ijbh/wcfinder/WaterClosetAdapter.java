@@ -17,6 +17,15 @@ import java.util.List;
 public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.WCViewHolder> {
 
     List<WaterCloset> wcs;
+    WaterClosetListener listener;
+    interface WaterClosetListener{
+        void onWcClicked(int position, View view);
+        void onWcLongClicked(int position, View view);
+    }
+
+    public void setListener(WaterClosetListener listener){
+        this.listener = listener;
+    }
 
     public WaterClosetAdapter(List<WaterCloset> wcs) {
         this.wcs = wcs;
@@ -38,6 +47,25 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
             wcImg = itemView.findViewById(R.id.wc_image);
             wcLike = itemView.findViewById(R.id.wc_like);
 
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        listener.onWcClicked(getAdapterPosition(), v);
+                    }
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if(listener != null){
+                        listener.onWcLongClicked(getAdapterPosition(), v);
+                    }
+                    return false;
+                }
+            });
         }
     }
 
