@@ -40,7 +40,8 @@
             android:textSize="30dp"
             android:id="@+id/wc_name_large"
             android:gravity="center"
-            android:layout_below="@id/wc_image_large"/>
+            android:layout_below="@id/wc_image_large"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -77,4 +78,4 @@
 
 
 
-</RelativeLayout>
+</LinearLayout>
