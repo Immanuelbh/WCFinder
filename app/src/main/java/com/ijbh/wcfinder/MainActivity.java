@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                //        .setAction("Action", null).show();
 
                 Intent intent = new Intent(MainActivity.this, NewWc.class);
                 startActivity(intent);
@@ -79,5 +79,12 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(waterClosetAdapter);
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Toast.makeText(this, "On Resume", Toast.LENGTH_SHORT).show();
     }
 }

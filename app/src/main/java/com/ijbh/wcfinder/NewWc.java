@@ -9,6 +9,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -17,6 +18,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ public class NewWc extends AppCompatActivity {
     Button firstPicBtn;
     Button addPicBtn;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +44,11 @@ public class NewWc extends AppCompatActivity {
 
         firstPicBtn = findViewById(R.id.first_pic_btn);
         addPicBtn = findViewById(R.id.add_pic_btn);
+        EditText wcName = findViewById(R.id.wc_new_name);
+        EditText wcFloor = findViewById(R.id.wc_new_floor);
+        EditText wcDesc = findViewById(R.id.wc_new_desc);
+        Button saveWcBtn = findViewById(R.id.save_wc_btn);
+
 
         firstPicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,19 +64,22 @@ public class NewWc extends AppCompatActivity {
                     }
                     else {
 
-
+                        file = new File("/storage/emulated/0/Pic.jpeg");
                         Uri fileUri = FileProvider.getUriForFile(NewWc.this, "com.ijbh.wcfinder.provider", file);
 
+                        //file = new File(Environment.getExternalStorageDirectory(), "Pic.jpeg");
                         //file = new File(getExternalFilesDir(null), "DemoFile.jpg"); // different function than example
+
                         //Uri fileUri = Uri.fromFile(file);
 
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
                         startActivityForResult(intent, CAMERA_REQUEST);
 
                         //maybe only after return successful
-                        firstPicBtn.setVisibility(View.GONE);
-                        addPicBtn.setVisibility(View.VISIBLE);
+                        //firstPicBtn.setVisibility(View.GONE);
+                        //addPicBtn.setVisibility(View.VISIBLE);
                     }
                 }
                 else{
@@ -79,17 +90,28 @@ public class NewWc extends AppCompatActivity {
         });
 
 
+        saveWcBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO work on return for result
+                //Intent intent = new Intent(NewWc.this, )
+            }
+        });
+
+
     }
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == WRITE_PERMISSION_REQUEST){
             if(grantResults[0] != PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(this, "Cannot Take Picture", Toast.LENGTH_SHORT).show();
             }
             else{
+                firstPicBtn.setVisibility(View.GONE);
+                addPicBtn.setVisibility(View.VISIBLE);
                 /*
                 file = new File(getExternalFilesDir(null), "DemoFile.jpg"); // different function than example
                 Uri fileUri = Uri.fromFile(file);
@@ -105,7 +127,9 @@ public class NewWc extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == CAMERA_REQUEST && resultCode == RESULT_OK){
-            wcImgIv.setImageDrawable(Drawable.createFromPath(file.getAbsolutePath()));
+            //wcImgIv.setImageDrawable(Drawable.createFromPath(file.getAbsolutePath()));
+            wcImgIv.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+
         }
     }
 }
