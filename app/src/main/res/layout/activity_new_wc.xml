@@ -70,6 +70,7 @@
                 android:layout_weight="1"
                 android:focusedByDefault="false"
                 android:id="@+id/wc_new_floor"
+                android:inputType="number"
                 />
         </LinearLayout>
 
