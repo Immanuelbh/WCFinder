@@ -39,22 +39,19 @@ public class MainActivity extends AppCompatActivity {
 
         wcs = new ArrayList<WaterCloset>();
 
+        //TODO change heart icon to boolean value
         wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
+        wcs.add(new WaterCloset("Office", "Right at the entrence", 2, false, R.drawable.wc_img_2, R.drawable.ic_favorite_border_black_24dp));
+        wcs.add(new WaterCloset("Microsoft", "At the end of the hall", 5, false, R.drawable.wc_img_2, R.drawable.ic_favorite_border_black_24dp));
+        wcs.add(new WaterCloset("Apple", "Building 11", 9, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
+        wcs.add(new WaterCloset("VMWare", "Building 20", 11, false, R.drawable.wc_img_2, R.drawable.ic_favorite_border_black_24dp));
+        wcs.add(new WaterCloset("Google", "Building 5", 4, false, R.drawable.wc_img_2, R.drawable.ic_favorite_border_black_24dp));
+        wcs.add(new WaterCloset("Hit", "Building 8", 2, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
+        wcs.add(new WaterCloset("Office", "Right at the entrence", 2, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
+        wcs.add(new WaterCloset("Microsoft", "At the end of the hall", 2, false, R.drawable.wc_img_2, R.drawable.ic_favorite_border_black_24dp));
+        wcs.add(new WaterCloset("Apple", "Building 11", 6, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
+        wcs.add(new WaterCloset("VMWare", "Building 20", 3, false, R.drawable.wc_img_2, R.drawable.ic_favorite_border_black_24dp));
+        wcs.add(new WaterCloset("Google", "Building 5", 9, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
 
         waterClosetAdapter = new WaterClosetAdapter(wcs);
 
@@ -72,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             public void onWcClicked(int position, View view) {
 
                 Intent intent = new Intent(MainActivity.this, WcActivity.class);
+                intent.putExtra("current_wc", wcs.get(position));
                 startActivity(intent);
             }
 
@@ -93,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
         WaterCloset newWc = (WaterCloset) intent.getSerializableExtra("NEWWC");
         //wcs.add(newWc); //can't use because of bitmap
+        Toast.makeText(this, newWc.getWcName()+"is the new WC", Toast.LENGTH_SHORT).show();
 
         try {
             FileOutputStream fos = openFileOutput("new_wc", MODE_PRIVATE);

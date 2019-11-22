@@ -28,8 +28,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class NewWc extends AppCompatActivity {
@@ -39,13 +42,14 @@ public class NewWc extends AppCompatActivity {
     private static final String IMAGE_NAME = "Pic";
 
     private ImageView wcImgIv;
-    private File file;
+    private File imgFile;
     private Button firstPicBtn;
     private Button addPicBtn;
     private WaterCloset newWc;
     private Bitmap wcBitmap;
     private String wcName, wcDesc;
     private int wcFloor;
+    private String currentImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +78,29 @@ public class NewWc extends AppCompatActivity {
                     }
                     else {
 
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        try {
+                            imgFile = new File(String.valueOf(createImageFile()));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        if(imgFile != null){
+                            Uri imgUri = FileProvider.getUriForFile(NewWc.this, getPackageName()+".provider",imgFile);
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                            startActivityForResult(intent, CAMERA_REQUEST);
+                        }
+
+                        /* works
                         file = new File(Environment.getExternalStorageDirectory(), IMAGE_NAME+"jpg");
                         Uri imageUri = FileProvider.getUriForFile(
                             NewWc.this,
                                 getPackageName()+".provider",
                                 file);
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        startActivityForResult(intent, CAMERA_REQUEST);
+                        */
 
                         //file = new File("/storage/emulated/0/Pic.jpeg");
 
@@ -88,12 +110,12 @@ public class NewWc extends AppCompatActivity {
 
                         //Uri fileUri = Uri.fromFile(file);
 
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        //intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                        //Toast.makeText(NewWc.this, file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                        //Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        ////intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        //intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        ////Toast.makeText(NewWc.this, file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
 
-                        startActivityForResult(intent, CAMERA_REQUEST);
+                        //startActivityForResult(intent, CAMERA_REQUEST);
 
                     }
                 }
@@ -113,9 +135,10 @@ public class NewWc extends AppCompatActivity {
                 wcDesc = wcDescEt.getText().toString();
                 wcFloor = Integer.parseInt(wcFloorEt.getText().toString());
 
-                newWc = new WaterCloset(wcName, wcDesc, wcFloor,false, wcBitmap
-                        ,R.drawable.ic_favorite_border_black_24dp);
+                //newWc = new WaterCloset(wcName, wcDesc, wcFloor,false, wcBitmap
+                 //       ,R.drawable.ic_favorite_border_black_24dp);
 
+                newWc = new WaterCloset(wcName, wcDesc, wcFloor, false, currentImagePath,R.drawable.ic_favorite_border_black_24dp);
                 Intent intent = new Intent(NewWc.this, MainActivity.class);
                 intent.putExtra("NEWWC",newWc);
                 startActivity(intent);
@@ -139,13 +162,7 @@ public class NewWc extends AppCompatActivity {
             else{
                 firstPicBtn.setVisibility(View.GONE);
                 addPicBtn.setVisibility(View.VISIBLE);
-                /*
-                file = new File(getExternalFilesDir(null), "DemoFile.jpg"); // different function than example
-                Uri fileUri = Uri.fromFile(file);
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                startActivityForResult(intent, CAMERA_REQUEST);
-*/
+
             }
         }
     }
@@ -157,8 +174,21 @@ public class NewWc extends AppCompatActivity {
             firstPicBtn.setVisibility(View.GONE);
             addPicBtn.setVisibility(View.VISIBLE);
 
-            wcBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            wcImgIv.setImageBitmap(wcBitmap);
+            File file = new File(currentImagePath);
+            try {
+                wcBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),Uri.fromFile(file));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if(wcBitmap != null){
+                wcImgIv.setImageBitmap(wcBitmap);
+            }
+
+            //works
+                //wcBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                //wcImgIv.setImageBitmap(wcBitmap);
+
             //wcImgIv.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
 
             //wcImgIv.setImageDrawable(Drawable.createFromPath(file.getAbsolutePath()));
@@ -176,5 +206,16 @@ public class NewWc extends AppCompatActivity {
 
 
         }
+    }
+
+    //TODO create file naming function
+    private File createImageFile() throws IOException{
+        String timestamp = new SimpleDateFormat("HHmmss_ddMMyyyy").format(new Date());
+        String imageFileName = "JPEG_" + timestamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName,timestamp,storageDir);
+
+        currentImagePath = image.getAbsolutePath();
+        return image;
     }
 }

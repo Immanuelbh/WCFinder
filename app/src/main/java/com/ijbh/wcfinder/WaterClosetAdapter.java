@@ -1,6 +1,7 @@
 package com.ijbh.wcfinder;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.GlideException;
 
 import org.w3c.dom.Text;
 
@@ -20,7 +24,7 @@ import java.util.List;
 
 public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.WCViewHolder> {
 
-    List<WaterCloset> wcs;
+    private List<WaterCloset> wcs;
     WaterClosetListener listener;
 
     interface WaterClosetListener{
@@ -38,17 +42,17 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
 
     public class WCViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView wcImgIv, wcLikeIv;
-        TextView wcNameTv, wcDescTv, wcFloorTv;
+        ImageView wcCardImgIv, wcCardLikeIv;
+        TextView wcCardNameTv, wcCardDescTv, wcCardFloorTv;
 
         public WCViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            wcNameTv = itemView.findViewById(R.id.wc_name);
-            wcDescTv = itemView.findViewById(R.id.wc_desc);
-            wcFloorTv = itemView.findViewById(R.id.wc_floor);
-            wcImgIv = itemView.findViewById(R.id.wc_image);
-            wcLikeIv = itemView.findViewById(R.id.wc_like);
+            wcCardNameTv = itemView.findViewById(R.id.wc_card_name);
+            wcCardDescTv = itemView.findViewById(R.id.wc_card_desc);
+            wcCardFloorTv = itemView.findViewById(R.id.wc_card_floor);
+            wcCardImgIv = itemView.findViewById(R.id.wc_card_img);
+            wcCardLikeIv = itemView.findViewById(R.id.wc_card_like);
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -84,12 +88,32 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
     @Override
     public void onBindViewHolder(@NonNull WCViewHolder holder, int position) {
         WaterCloset waterCloset = wcs.get(position);
+
+        if(waterCloset.getWcUriPath() == null){
+            holder.wcCardImgIv.setImageResource(waterCloset.getWcResId());
+
+        }
+        else{
+
+            //holder.wcCardImgIv.setImageBitmap(waterCloset.getWcBitmap());
+
+            Glide.with(holder.itemView.getContext()).load(waterCloset.getWcUriPath()).thumbnail(0.1f).into(holder.wcCardImgIv);
+
+            //works but very slow (full image)
+            //Bitmap bitmap = BitmapFactory.decodeFile(waterCloset.getWcUriPath());
+            //holder.wcCardImgIv.setImageBitmap(bitmap);
+
+            //holder.wcImgIv.setImageBitmap(waterCloset.getWcIconBitmap());
+        }
+
+        //works
+/*
         try{
             holder.wcImgIv.setImageResource(waterCloset.getWcResId());
         }catch (NullPointerException npe){
             //holder.wcImgIv.setImageBitmap(waterCloset.getWcBitmap());
             try {
-                FileInputStream fis = holder.wcImgIv.getContext().openFileInput("new_wc");
+                FileInputStream fis = holder.itemView.getContext().openFileInput("new_wc");
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 waterCloset = (WaterCloset)ois.readObject();
                 ois.close();
@@ -105,12 +129,13 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
             }
 
         }
+*/
 
 
-        holder.wcNameTv.setText(waterCloset.getWcName());
-        holder.wcDescTv.setText(waterCloset.getWcDescription());
-        holder.wcFloorTv.setText(waterCloset.getWcFloor()+"");
-        holder.wcLikeIv.setImageResource(waterCloset.getWcLikeId());
+        holder.wcCardNameTv.setText(waterCloset.getWcName());
+        holder.wcCardDescTv.setText(waterCloset.getWcDescription());
+        holder.wcCardFloorTv.setText(waterCloset.getWcFloor()+"");
+        holder.wcCardLikeIv.setImageResource(waterCloset.getWcLikeId());
 
     }
 

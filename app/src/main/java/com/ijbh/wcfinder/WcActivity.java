@@ -2,16 +2,59 @@ package com.ijbh.wcfinder;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class WcActivity extends AppCompatActivity {
 
-    String wcName, wcDesc, wcFloor;
+    private String wcName, wcDesc, wcFloor;
+    private WaterCloset wc;
+    private ImageView imgIv, likeIv;
+    private TextView wcNameTv, wcDescTv, wcFloorTv;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wc);
+
+        imgIv = findViewById(R.id.wc_image_large);
+        likeIv = findViewById(R.id.wc_like_large);
+        wcNameTv = findViewById(R.id.wc_name_large);
+        wcDescTv = findViewById(R.id.wc_desc_large);
+        wcFloorTv = findViewById(R.id.wc_current_floor);
+        imgIv = findViewById(R.id.wc_image_large);
+
+        Intent intent = getIntent();
+        wc = (WaterCloset) intent.getSerializableExtra("current_wc");
+        //WaterCloset newWc = (WaterCloset) intent.getSerializableExtra("NEWWC");
+
+        if(wc != null){
+            //Toast.makeText(this, wc.getWcFloor()+" is current", Toast.LENGTH_SHORT).show();
+            wcNameTv.setText(wc.getWcName());
+            wcDescTv.setText(wc.getWcDescription());
+            wcFloorTv.setText(wc.getWcFloor()+"");
+            if(wc.getWcResId()!= 0){ //existing image
+                imgIv.setImageResource(wc.getWcResId());
+            }
+            else{ // user created image
+                Bitmap bitmap = BitmapFactory.decodeFile(wc.getWcUriPath());
+                imgIv.setImageBitmap(bitmap);
+                //imgIv.setImageBitmap(wc.getWcBitmap());
+            }
+        }
+        else{
+            Toast.makeText(this, "Error - could not load WC", Toast.LENGTH_SHORT).show();
+
+        }
+
+
+        //populate fields
 
 
     }
