@@ -39,6 +39,14 @@ public class WcActivity extends AppCompatActivity {
             wcNameTv.setText(wc.getWcName());
             wcDescTv.setText(wc.getWcDescription());
             wcFloorTv.setText(wc.getWcFloor()+"");
+
+            if(wc.isWcLike()){
+                likeIv.setImageResource(R.drawable.ic_favorite_red_24dp);
+            }
+            else{
+                likeIv.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            }
+
             if(wc.getWcResId()!= 0){ //existing image
                 imgIv.setImageResource(wc.getWcResId());
             }

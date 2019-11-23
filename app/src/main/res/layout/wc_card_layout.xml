@@ -5,10 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardUseCompatPadding="true"
-    app:contentPaddingBottom="10dp"
-    app:contentPaddingTop="10dp"
     app:elevation="50dp"
-    app:cardCornerRadius="10dp">
+    app:cardCornerRadius="10dp"
+    android:background="@color/orange_light">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,31 +15,35 @@
         android:orientation="horizontal"
         android:padding="0dp"
         android:layout_margin="0dp"
+        android:background="@color/orange_light"
+        android:id="@+id/card_layout"
         >
 
         <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="175dp"
+            android:layout_height="175dp"
             android:src="@mipmap/ic_launcher"
             android:layout_gravity="start|fill_horizontal"
             android:id="@+id/wc_card_img"/>
 
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_marginTop="5dp"
-            android:background="#fac"
             >
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:orientation="horizontal"
                 android:layout_weight="1"
                 android:paddingStart="5dp"
                 >
-
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -48,52 +51,46 @@
                     android:textSize="22sp"
                     android:text="WC Name"
                     android:id="@+id/wc_card_name"
-                    android:layout_gravity="start"/>
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="10px"
+                    android:layout_marginTop="10px"
+                    />
+
+                <ImageButton
+                    android:id="@+id/wc_card_like"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_favorite_border_black_24dp"
+                    android:background="@android:color/transparent"
+                    android:layout_margin="20px"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/wc_card_desc"
-                    android:layout_gravity="start"
+                    android:layout_below="@id/wc_card_name"
                     android:text="WC Description"
-                    android:textSize="15sp" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:paddingEnd="5dp"
-                >
-
-
+                    android:textSize="15sp"
+                    android:layout_marginStart="10px"
+                    android:layout_marginTop="10px"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
                     android:text="Floor number"
                     android:id="@+id/wc_card_floor"
-                    android:layout_gravity="end"/>
+                    android:layout_below="@id/wc_card_desc"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10px"
+                    android:layout_marginBottom="10px"
 
-                <ImageButton
-                    android:id="@+id/wc_card_like"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:src="@drawable/ic_favorite_border_black_24dp"
                     />
-
-            </LinearLayout>
-
+            </RelativeLayout>
 
         </LinearLayout>
     </LinearLayout>
-
-
-
-
-
-
 
 </androidx.cardview.widget.CardView>

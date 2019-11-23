@@ -33,6 +33,7 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
     interface WaterClosetListener{
         boolean onItemMove(int fromPosition, int toPosition);
         void onWcClicked(int position, View view);
+        void onFavClick(int position);
         //void onWcLongClicked(int position, View view);
     }
 
@@ -43,6 +44,8 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
     public WaterClosetAdapter(List<WaterCloset> wcs) {
         this.wcs = wcs;
     }
+
+
 
     public class WCViewHolder extends RecyclerView.ViewHolder {
 
@@ -58,6 +61,14 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
             wcCardImgIv = itemView.findViewById(R.id.wc_card_img);
             wcCardLikeIv = itemView.findViewById(R.id.wc_card_like);
 
+            wcCardLikeIv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        listener.onFavClick(getAdapterPosition());
+                    }
+                }
+            });
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -68,13 +79,8 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
                 }
             });
 
-            itemView.setOnDragListener(new View.OnDragListener() {
-                @Override
-                public boolean onDrag(View view, DragEvent dragEvent) {
 
-                    return false;
-                }
-            });
+
 /*
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -148,7 +154,13 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
         holder.wcCardNameTv.setText(waterCloset.getWcName());
         holder.wcCardDescTv.setText(waterCloset.getWcDescription());
         holder.wcCardFloorTv.setText(waterCloset.getWcFloor()+"");
-        holder.wcCardLikeIv.setImageResource(waterCloset.getWcLikeId());
+
+        if(waterCloset.isWcLike()){
+            holder.wcCardLikeIv.setImageResource(R.drawable.ic_favorite_red_24dp);
+        }
+        else{
+            holder.wcCardLikeIv.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+        }
 
     }
 

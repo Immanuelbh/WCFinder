@@ -2,17 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/orange_medium"
+
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="250dp"
+        android:background="@color/cardview_dark_background"
         >
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:id="@+id/wc_image_large"
             android:src="@drawable/ic_launcher_background"
+
             />
 
         <ImageView
@@ -22,6 +27,8 @@
             android:id="@+id/wc_like_large"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
+            android:background="@android:color/transparent"
+            android:layout_margin="20px"
             />
 
     </RelativeLayout>
@@ -41,14 +48,19 @@
             android:id="@+id/wc_name_large"
             android:gravity="center"
             android:layout_below="@id/wc_image_large"
+            android:textColor="@color/cardview_dark_background"
             />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="30px"
             android:text="WC Description"
             android:textSize="22dp"
             android:id="@+id/wc_desc_large"
+            android:textColor="@color/cardview_dark_background"
+            android:layout_marginTop="25px"
+            android:background="@color/orange_light"
             />
 
         <LinearLayout
@@ -62,6 +74,8 @@
                 android:layout_height="wrap_content"
                 android:text="Located on floor number:"
                 android:textSize="20dp"
+                android:textColor="@color/cardview_dark_background"
+
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -70,6 +84,9 @@
                 android:text="floor number"
                 android:layout_marginStart="5dp"
                 android:id="@+id/wc_current_floor"
+                android:textColor="@color/cardview_dark_background"
+                android:background="@color/orange_light"
+                android:padding="10px"
                 />
         </LinearLayout>
     </LinearLayout>

@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,14 +42,13 @@ public class NewWc extends AppCompatActivity {
 
     private static final int CAMERA_REQUEST = 1;
     private static final int WRITE_PERMISSION_REQUEST = 1;
-    private static final String IMAGE_NAME = "Pic";
 
     private ImageView wcImgIv;
     private File imgFile;
     private Button firstPicBtn;
     private Button addPicBtn;
     private WaterCloset newWc;
-    private Bitmap wcBitmap;
+    private Bitmap wcBitmap = null;
     private String wcName, wcDesc;
     private int wcFloor;
     private String currentImagePath;
@@ -93,32 +93,6 @@ public class NewWc extends AppCompatActivity {
                             startActivityForResult(intent, CAMERA_REQUEST);
                         }
 
-                        /* works
-                        file = new File(Environment.getExternalStorageDirectory(), IMAGE_NAME+"jpg");
-                        Uri imageUri = FileProvider.getUriForFile(
-                            NewWc.this,
-                                getPackageName()+".provider",
-                                file);
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                        startActivityForResult(intent, CAMERA_REQUEST);
-                        */
-
-                        //file = new File("/storage/emulated/0/Pic.jpeg");
-
-                        //file = new File(Environment.getExternalStorageDirectory(), "Pic.jpeg");
-                        //file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "DemoFile.jpg"); // different function than example
-                        //Uri fileUri = FileProvider.getUriForFile(NewWc.this, "com.ijbh.wcfinder.provider", file);
-
-                        //Uri fileUri = Uri.fromFile(file);
-
-                        //Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        ////intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        //intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                        ////Toast.makeText(NewWc.this, file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-
-                        //startActivityForResult(intent, CAMERA_REQUEST);
-
                     }
                 }
                 else{
@@ -133,57 +107,60 @@ public class NewWc extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                AlertDialog alertDialog = new AlertDialog.Builder(NewWc.this).create();
-                alertDialog.setTitle("Save new WC");
-                alertDialog.setMessage("Are you sure you want to save this WC?");
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int position) {
-                        wcName = wcNameEt.getText().toString();
-                        wcDesc = wcDescEt.getText().toString();
-                        wcFloor = Integer.parseInt(wcFloorEt.getText().toString());
+                if(!(isEmpty(wcNameEt))){
+                    if(!(isEmpty(wcDescEt))){
+                        if(!(isEmpty(wcFloorEt))){
+                            if(wcBitmap != null){
 
-                        //newWc = new WaterCloset(wcName, wcDesc, wcFloor,false, wcBitmap
-                        //       ,R.drawable.ic_favorite_border_black_24dp);
+                                AlertDialog alertDialog = new AlertDialog.Builder(NewWc.this).create();
+                                alertDialog.setTitle("Save new WC");
+                                alertDialog.setMessage("Are you sure you want to save this WC?");
+                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int position) {
 
-                        newWc = new WaterCloset(wcName, wcDesc, wcFloor, false, currentImagePath,R.drawable.ic_favorite_border_black_24dp);
-                        Intent intent = new Intent(NewWc.this, MainActivity.class);
-                        intent.putExtra("NEWWC",newWc);
-                        startActivity(intent);
+                                        wcName = wcNameEt.getText().toString();
+                                        wcDesc = wcDescEt.getText().toString();
+                                        wcFloor = Integer.parseInt(wcFloorEt.getText().toString());
 
-                        finish();
+                                        newWc = new WaterCloset(wcName, wcDesc, wcFloor, false, currentImagePath);
+                                        Intent intent = new Intent(NewWc.this, MainActivity.class);
+                                        intent.putExtra("NEWWC",newWc);
+                                        startActivity(intent);
 
+                                        finish();
+
+                                    }
+                                });
+                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int position) {
+                                        //do nothing
+
+                                    }
+                                });
+
+                                alertDialog.show();
+                            }
+                            else{
+                                Toast.makeText(NewWc.this, "Please add a picture of the WC", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else{
+                            wcFloorEt.setError("Please enter WC floor");
+                        }
                     }
-                });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int position) {
-                        //do nothing
-
+                    else{
+                        wcDescEt.setError("Please enter a description for the WC");
                     }
-                });
+                }
+                else{
+                    wcNameEt.setError("Please enter WC name");
+                }
 
-                alertDialog.show();
-/*
-
-                wcName = wcNameEt.getText().toString();
-                wcDesc = wcDescEt.getText().toString();
-                wcFloor = Integer.parseInt(wcFloorEt.getText().toString());
-
-                //newWc = new WaterCloset(wcName, wcDesc, wcFloor,false, wcBitmap
-                 //       ,R.drawable.ic_favorite_border_black_24dp);
-
-                newWc = new WaterCloset(wcName, wcDesc, wcFloor, false, currentImagePath,R.drawable.ic_favorite_border_black_24dp);
-                Intent intent = new Intent(NewWc.this, MainActivity.class);
-                intent.putExtra("NEWWC",newWc);
-                startActivity(intent);
-
-                finish();
-*/
 
             }
         });
-
 
     }
 
@@ -221,26 +198,6 @@ public class NewWc extends AppCompatActivity {
                 wcImgIv.setImageBitmap(wcBitmap);
             }
 
-            //works
-                //wcBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                //wcImgIv.setImageBitmap(wcBitmap);
-
-            //wcImgIv.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
-
-            //wcImgIv.setImageDrawable(Drawable.createFromPath(file.getAbsolutePath()));
-            /*
-            Glide.with(getBaseContext())
-                    .load(file.getAbsolutePath())
-                    .apply(new RequestOptions().override(wcImgIv.getWidth(),wcImgIv.getHeight()))
-                    .into(wcImgIv);
-            String path = getFilesDir().getAbsolutePath();
-            Glide.with(getBaseContext())
-                    .load(file.getAbsolutePath())
-                    .apply(new RequestOptions().override(wcImgIv.getWidth(),200))
-                    .into(path);
-            */
-
-
         }
     }
 
@@ -252,5 +209,9 @@ public class NewWc extends AppCompatActivity {
 
         currentImagePath = image.getAbsolutePath();
         return image;
+    }
+
+    private boolean isEmpty(EditText etText) {
+        return etText.getText().toString().trim().length() == 0;
     }
 }

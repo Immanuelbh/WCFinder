@@ -17,30 +17,21 @@ import java.io.Serializable;
 public class WaterCloset implements Serializable {
 
     private String wcName, wcDescription, wcUriPath;
-    private int wcFloor, wcResId=0, wcLikeId;
-    private boolean wcLike;
+    private int wcFloor, wcResId = 0;//, wcLikeId;
+    private boolean wcLike = false;
     transient private Bitmap wcBitmap;
-   // private Bitmap wcIconBitmap;
+    // private Bitmap wcIconBitmap;
 
-    public WaterCloset(String wcName, String wcDescription, int wcFloor, boolean wcLike, int wcResId, int wcLikeId) {
+    public WaterCloset(String wcName, String wcDescription, int wcFloor, boolean wcLike, int wcResId) {
         this.wcName = wcName;
         this.wcDescription = wcDescription;
         this.wcFloor = wcFloor;
         this.wcResId = wcResId;
-        this.wcLikeId = wcLikeId;
+        //this.wcLikeId = wcLikeId;
         this.wcLike = wcLike;
-    }
-    public WaterCloset(String wcName, String wcDescription, int wcFloor, boolean wcLike, Bitmap wcBitmap, int wcLikeId) {
-        this.wcName = wcName;
-        this.wcDescription = wcDescription;
-        this.wcFloor = wcFloor;
-        this.wcBitmap = wcBitmap;
-        this.wcLikeId = wcLikeId;
-        this.wcLike = wcLike;
-        //this.wcIconBitmap = compressBitmap(wcBitmap);
     }
 
-    public WaterCloset(String wcName, String wcDesc, int wcFloor, boolean b, String currentImagePath, int likeId) {
+    public WaterCloset(String wcName, String wcDesc, int wcFloor, boolean b, String currentImagePath) {
         this.wcName = wcName;
         this.wcDescription = wcDesc;
         this.wcFloor = wcFloor;
@@ -48,7 +39,7 @@ public class WaterCloset implements Serializable {
         this.wcUriPath = currentImagePath;
         compressBitmap(currentImagePath);
         //wcBitmap = compressBitmap(currentImagePath);
-        this.wcLikeId = likeId;
+        //this.wcLikeId = likeId;
         this.wcLike = b;
     }
 
@@ -57,7 +48,7 @@ public class WaterCloset implements Serializable {
 
         //Glide.with()
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 25,stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 25, stream);
         byte[] byteArray = stream.toByteArray();
         wcBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
@@ -68,27 +59,6 @@ public class WaterCloset implements Serializable {
 
         //return compBitmap;
     }
-
-    public WaterCloset(String wcName, String wcDescription, int wcFloor, boolean wcLike, int wcResId) {
-        this.wcName = wcName;
-        this.wcDescription = wcDescription;
-        this.wcFloor = wcFloor;
-        this.wcLike = wcLike;
-        this.wcResId = wcResId;
-    }
-/*
-
-    public WaterCloset(Parcel in){
-        this.wcName = in.readString();
-        this.wcDescription = in.readString();
-        this.wcFloor = in.readInt();
-        this.wcResId = in.readInt();
-        this.wcLikeId = in.readInt();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            this.wcLike = in.readBoolean();
-        }
-    }
-*/
 
     public String getWcName() {
         return wcName;
@@ -130,14 +100,6 @@ public class WaterCloset implements Serializable {
         this.wcResId = wcResId;
     }
 
-    public int getWcLikeId() {
-        return wcLikeId;
-    }
-
-    public void setWcLikeId(int wcLikeId) {
-        this.wcLikeId = wcLikeId;
-    }
-
     public Bitmap getWcBitmap() {
         return wcBitmap;
     }
@@ -157,8 +119,8 @@ public class WaterCloset implements Serializable {
 */
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-        if(wcBitmap != null){
-            wcBitmap.compress(Bitmap.CompressFormat.JPEG,25,out);
+        if (wcBitmap != null) {
+            wcBitmap.compress(Bitmap.CompressFormat.JPEG, 25, out);
             //wcIconBitmap.compress(Bitmap.CompressFormat.JPEG,100,out);
         }
         out.defaultWriteObject();
@@ -177,34 +139,5 @@ public class WaterCloset implements Serializable {
     public void setWcUriPath(String wcUriPath) {
         this.wcUriPath = wcUriPath;
     }
-
-    /*
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(wcName);
-        parcel.writeString(wcDescription);
-        parcel.writeInt(wcFloor);
-        parcel.writeInt(wcResId);
-        parcel.writeInt(wcLikeId);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            parcel.writeBoolean(wcLike);
-        }
-    }
-
-    public static final Parcelable.Creator<WaterCloset> CREATOR = new Parcelable.Creator<WaterCloset>()
-    {
-        public WaterCloset createFromParcel(Parcel in)
-        {
-            return new WaterCloset(in);
-        }
-        public WaterCloset[] newArray(int size)
-        {
-            return new WaterCloset[size];
-        }
-    };*/
 }
+

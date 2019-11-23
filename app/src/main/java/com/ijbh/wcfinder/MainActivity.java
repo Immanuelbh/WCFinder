@@ -51,18 +51,18 @@ public class MainActivity extends AppCompatActivity {
         wcs = new ArrayList<WaterCloset>();
 
         //TODO change heart icon to boolean value
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Office", "Right at the entrence", 2, false, R.drawable.wc_img_2, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Microsoft", "At the end of the hall", 5, false, R.drawable.wc_img_2, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Apple", "Building 11", 9, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("VMWare", "Building 20", 11, false, R.drawable.wc_img_2, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Google", "Building 5", 4, false, R.drawable.wc_img_2, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Hit", "Building 8", 2, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Office", "Right at the entrence", 2, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Microsoft", "At the end of the hall", 2, false, R.drawable.wc_img_2, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Apple", "Building 11", 6, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("VMWare", "Building 20", 3, false, R.drawable.wc_img_2, R.drawable.ic_favorite_border_black_24dp));
-        wcs.add(new WaterCloset("Google", "Building 5", 9, false, R.drawable.wc_img_1, R.drawable.ic_favorite_border_black_24dp));
+        wcs.add(new WaterCloset("Hit", "Building 8", 1, true, R.drawable.wc_img_1));
+        wcs.add(new WaterCloset("Office", "Right at the entrence", 2, false, R.drawable.wc_img_2));
+        wcs.add(new WaterCloset("Microsoft", "At the end of the hall", 5, true, R.drawable.wc_img_2));
+        wcs.add(new WaterCloset("Apple", "Building 11", 9, true, R.drawable.wc_img_1));
+        wcs.add(new WaterCloset("VMWare", "Building 20", 11, false, R.drawable.wc_img_2));
+        wcs.add(new WaterCloset("Google", "Building 5", 4, false, R.drawable.wc_img_2));
+        wcs.add(new WaterCloset("Hit", "Building 8", 2, false, R.drawable.wc_img_1));
+        wcs.add(new WaterCloset("Office", "Right at the entrence", 2, false, R.drawable.wc_img_1));
+        wcs.add(new WaterCloset("Microsoft", "At the end of the hall", 2, false, R.drawable.wc_img_2));
+        wcs.add(new WaterCloset("Apple", "Building 11", 6, false, R.drawable.wc_img_1));
+        wcs.add(new WaterCloset("VMWare", "Building 20", 3, true, R.drawable.wc_img_2));
+        wcs.add(new WaterCloset("Google", "Building 5", 9, false, R.drawable.wc_img_1));
 
         waterClosetAdapter = new WaterClosetAdapter(wcs);
 
@@ -84,6 +84,15 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("current_wc", wcs.get(position));
                 startActivity(intent);
             }
+
+            @Override
+            public void onFavClick(int position) {
+                boolean currentLike = wcs.get(position).isWcLike();
+
+                wcs.get(position).setWcLike(!currentLike);
+
+                waterClosetAdapter.notifyItemChanged(position);
+            }
 /*
 
             @Override
@@ -91,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
                 wcs.remove(position);
                 waterClosetAdapter.notifyItemRemoved(position);
             }
+
+
 */
 
             @Override
