@@ -2,11 +2,13 @@ package com.ijbh.wcfinder;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -131,6 +133,39 @@ public class NewWc extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                AlertDialog alertDialog = new AlertDialog.Builder(NewWc.this).create();
+                alertDialog.setTitle("Save new WC");
+                alertDialog.setMessage("Are you sure you want to save this WC?");
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int position) {
+                        wcName = wcNameEt.getText().toString();
+                        wcDesc = wcDescEt.getText().toString();
+                        wcFloor = Integer.parseInt(wcFloorEt.getText().toString());
+
+                        //newWc = new WaterCloset(wcName, wcDesc, wcFloor,false, wcBitmap
+                        //       ,R.drawable.ic_favorite_border_black_24dp);
+
+                        newWc = new WaterCloset(wcName, wcDesc, wcFloor, false, currentImagePath,R.drawable.ic_favorite_border_black_24dp);
+                        Intent intent = new Intent(NewWc.this, MainActivity.class);
+                        intent.putExtra("NEWWC",newWc);
+                        startActivity(intent);
+
+                        finish();
+
+                    }
+                });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int position) {
+                        //do nothing
+
+                    }
+                });
+
+                alertDialog.show();
+/*
+
                 wcName = wcNameEt.getText().toString();
                 wcDesc = wcDescEt.getText().toString();
                 wcFloor = Integer.parseInt(wcFloorEt.getText().toString());
@@ -144,6 +179,7 @@ public class NewWc extends AppCompatActivity {
                 startActivity(intent);
 
                 finish();
+*/
 
             }
         });
@@ -208,7 +244,6 @@ public class NewWc extends AppCompatActivity {
         }
     }
 
-    //TODO create file naming function
     private File createImageFile() throws IOException{
         String timestamp = new SimpleDateFormat("HHmmss_ddMMyyyy").format(new Date());
         String imageFileName = "JPEG_" + timestamp + "_";

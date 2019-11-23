@@ -2,6 +2,7 @@ package com.ijbh.wcfinder;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Collections;
 import java.util.List;
+
 
 public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.WCViewHolder> {
 
@@ -28,8 +31,9 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
     WaterClosetListener listener;
 
     interface WaterClosetListener{
+        boolean onItemMove(int fromPosition, int toPosition);
         void onWcClicked(int position, View view);
-        void onWcLongClicked(int position, View view);
+        //void onWcLongClicked(int position, View view);
     }
 
     public void setListener(WaterClosetListener listener){
@@ -64,6 +68,14 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
                 }
             });
 
+            itemView.setOnDragListener(new View.OnDragListener() {
+                @Override
+                public boolean onDrag(View view, DragEvent dragEvent) {
+
+                    return false;
+                }
+            });
+/*
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -72,7 +84,7 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
                     }
                     return false;
                 }
-            });
+            });*/
         }
     }
 
@@ -89,6 +101,7 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
     public void onBindViewHolder(@NonNull WCViewHolder holder, int position) {
         WaterCloset waterCloset = wcs.get(position);
 
+        //TODO check after closing and reopening the app, how to restore correctly
         if(waterCloset.getWcUriPath() == null){
             holder.wcCardImgIv.setImageResource(waterCloset.getWcResId());
 

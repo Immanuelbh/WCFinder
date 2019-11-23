@@ -1,12 +1,17 @@
 package com.ijbh.wcfinder;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,12 +24,18 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String KEY_RECYCLER_STATE = "recycler_state";
     ArrayList<WaterCloset> wcs;
     WaterClosetAdapter waterClosetAdapter;
+
+    RecyclerView recyclerView;
+    private Bundle bundleRecyclerViewState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        RecyclerView recyclerView = findViewById(R.id.recycler);
+        recyclerView = findViewById(R.id.recycler);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -65,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         waterClosetAdapter.setListener(new WaterClosetAdapter.WaterClosetListener() {
+
             @Override
             public void onWcClicked(int position, View view) {
 
@@ -72,13 +84,84 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("current_wc", wcs.get(position));
                 startActivity(intent);
             }
+/*
 
             @Override
             public void onWcLongClicked(int position, View view) {
                 wcs.remove(position);
                 waterClosetAdapter.notifyItemRemoved(position);
             }
+*/
+
+            @Override
+            public boolean onItemMove(int fromPosition, int toPosition) {
+                if(fromPosition < toPosition){
+                    for(int i = fromPosition; i < toPosition; i++){
+                        Collections.swap(wcs, i, i+1);
+                    }
+                }
+                else{
+                    for(int i = fromPosition; i > toPosition; i--){
+                        Collections.swap(wcs, i, i-1);
+                    }
+                }
+                waterClosetAdapter.notifyItemMoved(fromPosition, toPosition);
+                return true;
+            }
         });
+
+        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean isLongPressDragEnabled() {
+                return true;
+            }
+
+            @Override //not sure if needed
+            public int getMovementFlags(RecyclerView recyclerView,
+                                        RecyclerView.ViewHolder viewHolder) {
+                int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+                int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+                return makeMovementFlags(dragFlags, swipeFlags);
+            }
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                waterClosetAdapter.listener.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+
+                return true;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                final RecyclerView.ViewHolder temp = viewHolder;
+
+
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                alertDialog.setTitle("Delete WC?");
+                alertDialog.setMessage("Are you sure you want delete "+wcs.get(viewHolder.getAdapterPosition()).getWcName()+ "permanently?");
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int position) {
+                        wcs.remove(temp.getAdapterPosition());
+                        waterClosetAdapter.notifyItemRemoved(temp.getAdapterPosition());
+                    }
+                });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int position) {
+                        waterClosetAdapter.notifyDataSetChanged();
+
+                    }
+                });
+
+                alertDialog.show();
+
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         recyclerView.setAdapter(waterClosetAdapter);
 
@@ -89,9 +172,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
+
         WaterCloset newWc = (WaterCloset) intent.getSerializableExtra("NEWWC");
         //wcs.add(newWc); //can't use because of bitmap
-        Toast.makeText(this, newWc.getWcName()+"is the new WC", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, newWc.getWcName()+"is the new WC", Toast.LENGTH_SHORT).show();
 
         try {
             FileOutputStream fos = openFileOutput("new_wc", MODE_PRIVATE);
@@ -110,5 +194,35 @@ public class MainActivity extends AppCompatActivity {
 
         waterClosetAdapter.notifyDataSetChanged();
         //TODO update the list.
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        bundleRecyclerViewState = new Bundle();
+        Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
+        bundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE,listState);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        super.onPause();
+        bundleRecyclerViewState = new Bundle();
+        Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
+        bundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE,listState);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (bundleRecyclerViewState != null) {
+            Parcelable listState = bundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+            recyclerView.getLayoutManager().onRestoreInstanceState(listState);
+        }
     }
 }
