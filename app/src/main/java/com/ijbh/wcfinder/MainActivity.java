@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        wcs = new ArrayList<WaterCloset>();
+        wcs = new ArrayList<>();
 
         //TODO change heart icon to boolean value
         wcs.add(new WaterCloset("Hit", "Building 8", 1, true, R.drawable.wc_img_1));
@@ -129,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override //not sure if needed
-            public int getMovementFlags(RecyclerView recyclerView,
-                                        RecyclerView.ViewHolder viewHolder) {
+            public int getMovementFlags(@NonNull RecyclerView recyclerView,
+                                        @NonNull RecyclerView.ViewHolder viewHolder) {
                 int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
                 int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
                 return makeMovementFlags(dragFlags, swipeFlags);
@@ -149,16 +150,16 @@ public class MainActivity extends AppCompatActivity {
 
 
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                alertDialog.setTitle("Delete WC?");
-                alertDialog.setMessage("Are you sure you want delete "+wcs.get(viewHolder.getAdapterPosition()).getWcName()+ "permanently?");
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                alertDialog.setTitle(getString(R.string.delete_wc_str));
+                alertDialog.setMessage(getString(R.string.delete_wc_msg_1_str)+wcs.get(viewHolder.getAdapterPosition()).getWcName()+ getString(R.string.delete_wc_msg_2_str));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.yes_str), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int position) {
                         wcs.remove(temp.getAdapterPosition());
                         waterClosetAdapter.notifyItemRemoved(temp.getAdapterPosition());
                     }
                 });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.no_str), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int position) {
                         waterClosetAdapter.notifyDataSetChanged();
@@ -197,8 +198,6 @@ public class MainActivity extends AppCompatActivity {
             wcs.add(newWc);
 
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -212,8 +211,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         bundleRecyclerViewState = new Bundle();
-        Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
-        bundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE,listState);
+        try{
+            Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
+            bundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE,listState);
+
+        }catch (NullPointerException npe){
+            Toast.makeText(this, "Error loading listState", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -222,8 +226,13 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         super.onPause();
         bundleRecyclerViewState = new Bundle();
-        Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
-        bundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE,listState);
+        try{
+            Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
+            bundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE,listState);
+
+        }catch (NullPointerException npe){
+            Toast.makeText(this, "Error loading listState", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -233,7 +242,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (bundleRecyclerViewState != null) {
             Parcelable listState = bundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
-            recyclerView.getLayoutManager().onRestoreInstanceState(listState);
+            Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(listState);
+            //TODO check if this is correct
         }
     }
 }

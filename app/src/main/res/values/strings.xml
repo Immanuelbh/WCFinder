@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">WCFinder</string>
+    <string name="wc_name_str">Enter WC name</string>
+    <string name="wc_floor_str">Floor</string>
+    <string name="wc_desc_str">Give a few details on the WC you want to add.</string>
+    <string name="save_str">SAVE</string>
+    <string name="no_permissions_str">No permissions!</string>
+    <string name="low_sdk_str">SDK lower than 24!</string>
+    <string name="dialog_new_save_str">Save new WC</string>
+    <string name="dialog_msg_new_wc_str">Are you sure you want to save this WC?</string>
+    <string name="yes_str">Yes</string>
+    <string name="no_str">No</string>
+    <string name="err_add_pic_str">Please add a picture of the WC</string>
+    <string name="err_add_floor">Please enter WC floor</string>
+    <string name="err_add_desc">Please enter a description for the WC</string>
+    <string name="err_add_name">Please enter WC name</string>
+    <string name="err_cant_take_pic">Cannot take picture</string>
+    <string name="delete_wc_str">Delete WC?</string>
+    <string name="delete_wc_msg_1_str">Are you sure you want to delete</string>
+    <string name="delete_wc_msg_2_str">permanently?</string>
+    <string name="err_wc_load">Error - could not load WC</string>
 </resources>

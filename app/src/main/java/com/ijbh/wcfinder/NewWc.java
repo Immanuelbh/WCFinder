@@ -52,6 +52,7 @@ public class NewWc extends AppCompatActivity {
     private String wcName, wcDesc;
     private int wcFloor;
     private String currentImagePath;
+    private boolean wcLike = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,8 @@ public class NewWc extends AppCompatActivity {
         final EditText wcFloorEt = findViewById(R.id.wc_new_floor);
         final EditText wcDescEt = findViewById(R.id.wc_new_desc);
         Button saveWcBtn = findViewById(R.id.save_wc_btn);
+        final ImageView wcLikeIv = findViewById(R.id.wc_new_like);
+
 
 
         firstPicBtn.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +78,7 @@ public class NewWc extends AppCompatActivity {
                     int hasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
                     if(hasWritePermission != PackageManager.PERMISSION_GRANTED){
-                        Toast.makeText(NewWc.this, "no permissions!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NewWc.this, R.string.no_permissions_str, Toast.LENGTH_SHORT).show();
                         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},WRITE_PERMISSION_REQUEST);
                     }
                     else {
@@ -96,12 +99,25 @@ public class NewWc extends AppCompatActivity {
                     }
                 }
                 else{
-                    Toast.makeText(NewWc.this, "SDK Lower than 24", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewWc.this, R.string.low_sdk_str, Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
 
+        wcLikeIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(wcLike){
+                    wcLikeIv.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                    wcLike = false;
+                }
+                else{
+                    wcLikeIv.setImageResource(R.drawable.ic_favorite_red_24dp);
+                    wcLike = true;
+                }
+            }
+        });
 
         saveWcBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,10 +128,11 @@ public class NewWc extends AppCompatActivity {
                         if(!(isEmpty(wcFloorEt))){
                             if(wcBitmap != null){
 
+                                //TODO get the hebrew text -
                                 AlertDialog alertDialog = new AlertDialog.Builder(NewWc.this).create();
-                                alertDialog.setTitle("Save new WC");
-                                alertDialog.setMessage("Are you sure you want to save this WC?");
-                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                                alertDialog.setTitle(getString(R.string.dialog_new_save_str));
+                                alertDialog.setMessage(getString(R.string.dialog_msg_new_wc_str));
+                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.yes_str), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int position) {
 
@@ -123,7 +140,8 @@ public class NewWc extends AppCompatActivity {
                                         wcDesc = wcDescEt.getText().toString();
                                         wcFloor = Integer.parseInt(wcFloorEt.getText().toString());
 
-                                        newWc = new WaterCloset(wcName, wcDesc, wcFloor, false, currentImagePath);
+
+                                        newWc = new WaterCloset(wcName, wcDesc, wcFloor, wcLike, currentImagePath);
                                         Intent intent = new Intent(NewWc.this, MainActivity.class);
                                         intent.putExtra("NEWWC",newWc);
                                         startActivity(intent);
@@ -132,7 +150,7 @@ public class NewWc extends AppCompatActivity {
 
                                     }
                                 });
-                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.no_str), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int position) {
                                         //do nothing
@@ -143,19 +161,19 @@ public class NewWc extends AppCompatActivity {
                                 alertDialog.show();
                             }
                             else{
-                                Toast.makeText(NewWc.this, "Please add a picture of the WC", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(NewWc.this, getString(R.string.err_add_pic_str), Toast.LENGTH_SHORT).show();
                             }
                         }
                         else{
-                            wcFloorEt.setError("Please enter WC floor");
+                            wcFloorEt.setError(getString(R.string.err_add_floor));
                         }
                     }
                     else{
-                        wcDescEt.setError("Please enter a description for the WC");
+                        wcDescEt.setError(getString(R.string.err_add_desc));
                     }
                 }
                 else{
-                    wcNameEt.setError("Please enter WC name");
+                    wcNameEt.setError(getString(R.string.err_add_name));
                 }
 
 
@@ -170,7 +188,7 @@ public class NewWc extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == WRITE_PERMISSION_REQUEST){
             if(grantResults[0] != PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(this, "Cannot Take Picture", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.err_cant_take_pic), Toast.LENGTH_SHORT).show();
             }
             else{
                 firstPicBtn.setVisibility(View.GONE);

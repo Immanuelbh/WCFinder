@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WCFinder</string>
+    <string name="wc_name_str">שם שירותים</string>
+    <string name="wc_floor_str">קומה</string>
+    <string name="wc_desc_str">הוסף כמה פרטים על השירותים</string>
+    <string name="save_str">שמור</string>
+    <string name="no_permissions_str">אין הרשאות!</string>
+    <string name="low_sdk_str">SDK נמוך מ-24!</string>
+    <string name="dialog_msg_new_wc_str">האם לשמור שירותים אלו?</string>
+    <string name="dialog_new_save_str">שמור שירותים חדשים</string>
+    <string name="err_add_desc">הכנס תיאור עבור השירותים</string>
+    <string name="err_add_floor">הכנס קומה</string>
+    <string name="err_add_name">הכנס שם שירותים</string>
+    <string name="err_add_pic_str">אנא הוסף תמונה של השירותים</string>
+    <string name="err_cant_take_pic">לא ניתן לצלם</string>
+    <string name="no_str">לא</string>
+    <string name="yes_str">כן</string>
+    <string name="delete_wc_str">למחוק שירותים?</string>
+    <string name="delete_wc_msg_1_str">"האם אתה בטוח שברצונך למחוק את "</string>
+    <string name="delete_wc_msg_2_str">לצמיתות?</string>
+    <string name="err_wc_load">שגיאה - לא ניתן לטעון שירותים אלו</string>
+</resources>

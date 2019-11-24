@@ -8,4 +8,5 @@
     <color name="orange_light">#ffdbc5</color>
     <color name="orange_medium">#ff9d76</color>
     <color name="orange_heavy">#ef4339</color>
+    <color name="dark_bg_img">#521C1C</color>
 </resources>

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,10 +58,9 @@ public class WcActivity extends AppCompatActivity {
             }
         }
         else{
-            Toast.makeText(this, "Error - could not load WC", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.err_wc_load, Toast.LENGTH_SHORT).show();
 
         }
-
 
         //populate fields
 
