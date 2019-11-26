@@ -1,34 +1,24 @@
 package com.ijbh.wcfinder;
 
-import android.app.Application;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
 
-import com.bumptech.glide.Glide;
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 
 public class WaterCloset implements Serializable {
 
-    private String wcName, wcDescription, wcUriPath;
+    private String wcName, wcDescription, wcUriPath, wcLocation, wcDate;
     private int wcResId = 0;
     private boolean wcLike = false;
     private double ind_clean = 0.0, ind_wifi = 0.0, ind_paper = 0.0, ind_odour = 0.0;
     private double overallScore = 0.0;
-    transient private Bitmap wcBitmap;
-    private Bitmap wcIconBitmap;
 
     public WaterCloset(){}
 
-    public WaterCloset(String wcName, String wcDescription, boolean wcLike, int wcResId, double clean, double wifi, double paper, double odour) {
+    public WaterCloset(String wcName, String wcDescription, String location, String date, boolean wcLike, int wcResId, double clean, double wifi, double paper, double odour) {
         this.wcName = wcName;
         this.wcDescription = wcDescription;
+        this.wcLocation = location;
+        this.wcDate = date;
         this.wcResId = wcResId;
         this.wcLike = wcLike;
         this.ind_clean = clean;
@@ -39,33 +29,18 @@ public class WaterCloset implements Serializable {
     }
 
 
-    public WaterCloset(String wcName, String wcDesc, boolean wcLike, String currentImagePath, double ind_clean, double ind_wifi, double ind_paper, double ind_odour) {
+    public WaterCloset(String wcName, String wcDesc, String location, String date, boolean wcLike, String currentImagePath, double ind_clean, double ind_wifi, double ind_paper, double ind_odour) {
         this.wcName = wcName;
         this.wcDescription = wcDesc;
+        this.wcLocation = location;
+        this.wcDate = date;
         this.wcUriPath = currentImagePath;
-        compressBitmap(currentImagePath);
         this.wcLike = wcLike;
         this.ind_clean = ind_clean;
         this.ind_wifi = ind_wifi;
         this.ind_paper = ind_paper;
         this.ind_odour = ind_odour;
         this.overallScore = (ind_clean + ind_wifi + ind_paper + ind_odour)/4.0;
-    }
-
-    private void compressBitmap(String path) {
-        Bitmap bitmap = BitmapFactory.decodeFile(path);
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 25, stream);
-        byte[] byteArray = stream.toByteArray();
-        wcBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-
-        //TODO finish the function (first remove the comment)
-        //FileOutputStream
-        //compBitmap = wcBitmap.compress(Bitmap.CompressFormat.JPEG, )
-
-
-        //return compBitmap;
     }
 
     public String getWcName() {
@@ -98,14 +73,6 @@ public class WaterCloset implements Serializable {
 
     public void setWcResId(int wcResId) {
         this.wcResId = wcResId;
-    }
-
-    public Bitmap getWcBitmap() {
-        return wcBitmap;
-    }
-
-    public void setWcBitmap(Bitmap wcBitmap) {
-        this.wcBitmap = wcBitmap;
     }
 
     public double getInd_clean() {
@@ -148,31 +115,29 @@ public class WaterCloset implements Serializable {
         this.overallScore = overallScore;
     }
 
-    /*
-
-    public Bitmap getWcIconBitmap() {
-        return wcIconBitmap;
+    public String getWcLocation() {
+        return wcLocation;
     }
 
-    public void setWcIconBitmap(Bitmap wcIconBitmap) {
-        this.wcIconBitmap = wcIconBitmap;
+    public void setWcLocation(String wcLocation) {
+        this.wcLocation = wcLocation;
     }
-*/
+
+    public String getWcDate() {
+        return wcDate;
+    }
+
+    public void setWcDate(String wcDate) {
+        this.wcDate = wcDate;
+    }
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
 
-        if (wcBitmap != null) {
-            wcBitmap.compress(Bitmap.CompressFormat.JPEG, 25, out);
-            //wcIconBitmap.compress(Bitmap.CompressFormat.JPEG,100,out);
-        }
-
-        //wcIconBitmap.compress(Bitmap.CompressFormat.JPEG, 50,out);
         out.defaultWriteObject();
     }
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-        wcBitmap = BitmapFactory.decodeStream(in);
-        //wcIconBitmap = BitmapFactory.decodeStream(in);
+
         in.defaultReadObject();
     }
 

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,8 +26,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -37,6 +41,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -45,17 +50,18 @@ public class NewWc extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 1;
     private static final int WRITE_PERMISSION_REQUEST = 1;
 
-    private ImageView wcImgIv;
     private File imgFile;
-    private Button firstPicBtn, addPicBtn;
     private WaterCloset newWc;
+    private Button firstPicBtn, addPicBtn;
+    private ImageView wcImgIv, wcLikeIv;
     private Bitmap wcBitmap = null;
-    private String wcName, wcDesc;
-    //private int wcFloor;
+    private String wcName, wcDesc, wcLocation, wcDate;
     private String currentImagePath;
-    private boolean wcLike = false;
+    private boolean wcLike = false, dateSet = false;
     private double ind_clean = 0.0, ind_wifi = 0.0, ind_paper = 0.0, ind_odour = 0.0;
-    EditText wcNameEt, wcDescEt, cleanEt, wifiEt, paperEt, odourEt;
+    EditText wcNameEt, wcDescEt, wcLocationEt, cleanEt, wifiEt, paperEt, odourEt;
+    TextView wcDateTv;
+    LinearLayout locationLl, dateLl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,19 +69,22 @@ public class NewWc extends AppCompatActivity {
         setContentView(R.layout.activity_new_wc);
 
         wcImgIv = findViewById(R.id.wc_new_img);
+        wcLikeIv = findViewById(R.id.wc_new_like);
 
         firstPicBtn = findViewById(R.id.first_pic_btn);
         addPicBtn = findViewById(R.id.add_pic_btn);
+
         wcNameEt = findViewById(R.id.wc_new_name);
         wcDescEt = findViewById(R.id.wc_new_desc);
-        //final EditText wcFloorEt = findViewById(R.id.wc_new_floor);
-        Button saveWcBtn = findViewById(R.id.save_wc_btn);
-        final ImageView wcLikeIv = findViewById(R.id.wc_new_like);
+        wcLocationEt = findViewById(R.id.wc_location);
+        wcDateTv = findViewById(R.id.wc_date);
         cleanEt = findViewById(R.id.new_clean);
         wifiEt = findViewById(R.id.new_wifi);
         paperEt = findViewById(R.id.new_paper);
         odourEt = findViewById(R.id.new_odour);
 
+        locationLl = findViewById(R.id.add_address);
+        dateLl = findViewById(R.id.add_date);
 
         firstPicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,62 +130,34 @@ public class NewWc extends AppCompatActivity {
                 }
             }
         });
-/*
-        saveWcBtn.setOnClickListener(new View.OnClickListener() {
+
+        locationLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(fieldsAreValid()){
-                    if(wcBitmap != null){
-
-                        AlertDialog alertDialog = new AlertDialog.Builder(NewWc.this).create();
-                        alertDialog.setTitle(getString(R.string.dialog_new_save_str));
-                        alertDialog.setMessage(getString(R.string.dialog_msg_new_wc_str));
-                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.yes_str), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int position) {
-
-                                wcName = wcNameEt.getText().toString();
-                                wcDesc = wcDescEt.getText().toString();
-                                //wcFloor = Integer.parseInt(wcFloorEt.getText().toString());
-                                ind_clean = Integer.parseInt(cleanEt.getText().toString());
-                                ind_wifi = Integer.parseInt(wifiEt.getText().toString());
-                                ind_paper = Integer.parseInt(paperEt.getText().toString());
-                                ind_odour = Integer.parseInt(odourEt.getText().toString());
-
-                                //newWc = new WaterCloset(wcName, wcDesc, wcFloor, wcLike, currentImagePath);
-                                newWc = new WaterCloset(wcName, wcDesc, wcLike, currentImagePath, ind_clean, ind_wifi, ind_paper, ind_odour);
-                                Intent intent = new Intent(NewWc.this, MainActivity.class);
-                                intent.putExtra("NEWWC",newWc);
-                                startActivity(intent);
-
-                                finish();
-
-                            }
-                        });
-                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.no_str), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int position) {
-                                //do nothing
-
-                            }
-                        });
-
-                        alertDialog.show();
-                    }
-                    else{
-                        Toast.makeText(NewWc.this, getString(R.string.err_add_pic_str), Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else{
-                    sendError();
-                }
-
 
             }
         });
 
-    */
+        dateLl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dpd = new DatePickerDialog(NewWc.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        wcDateTv.setText(dayOfMonth + "/" + (month+1) + "/" + year);
+                        dateSet = true;
+                    }
+                }, year, month,day);
+                dpd.show();
+            }
+        });
+
+
     }
 
     private boolean fieldsAreValid() {
@@ -203,6 +184,16 @@ public class NewWc extends AppCompatActivity {
         else if(isEmpty(wcDescEt)){
             wcDescEt.setError(getString(R.string.err_add_desc));
             Toast.makeText(this, R.string.err_add_desc, Toast.LENGTH_SHORT).show();
+
+        }
+        else if(isEmpty(wcLocationEt)){
+            wcLocationEt.setError(getString(R.string.err_add_location));
+            Toast.makeText(this, R.string.err_add_location, Toast.LENGTH_SHORT).show();
+
+        }
+        else if(!dateSet){
+            wcDateTv.setError(getString(R.string.err_add_date));
+            Toast.makeText(this, R.string.err_add_date, Toast.LENGTH_SHORT).show();
 
         }
         else if(isEmpty(cleanEt)){
@@ -233,15 +224,16 @@ public class NewWc extends AppCompatActivity {
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == WRITE_PERMISSION_REQUEST){
             if(grantResults[0] != PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(this, getString(R.string.err_cant_take_pic), Toast.LENGTH_SHORT).show();
             }
             else{
+
                 firstPicBtn.setVisibility(View.GONE);
-                addPicBtn.setVisibility(View.VISIBLE);
+                //addPicBtn.setVisibility(View.VISIBLE);
 
             }
         }
@@ -252,7 +244,11 @@ public class NewWc extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == CAMERA_REQUEST && resultCode == RESULT_OK){
             firstPicBtn.setVisibility(View.GONE);
-            addPicBtn.setVisibility(View.VISIBLE);
+            //addPicBtn.setVisibility(View.VISIBLE);
+
+            //thumbnail
+            //Bitmap bitmap = (Bitmap)data.getExtras().get("data");
+            //imageView.setImageBitmap(bitmap);
 
             File file = new File(currentImagePath);
             try {
@@ -321,11 +317,17 @@ public class NewWc extends AppCompatActivity {
                             ind_wifi = Integer.parseInt(wifiEt.getText().toString());
                             ind_paper = Integer.parseInt(paperEt.getText().toString());
                             ind_odour = Integer.parseInt(odourEt.getText().toString());
+                            wcLocation = wcLocationEt.getText().toString();
+                            wcDate = wcDateTv.getText().toString();
 
-                            newWc = new WaterCloset(wcName, wcDesc, wcLike, currentImagePath, ind_clean, ind_wifi, ind_paper, ind_odour);
-                            Intent intent = new Intent(NewWc.this, MainActivity.class);
-                            intent.putExtra("NEWWC",newWc);
-                            startActivity(intent);
+                            newWc = new WaterCloset(wcName, wcDesc, wcLocation, wcDate, wcLike, currentImagePath, ind_clean, ind_wifi, ind_paper, ind_odour);
+
+                            WaterClosetManager manager = WaterClosetManager.getInstance(NewWc.this);
+                            manager.addWaterCloset(newWc);
+
+                            //Intent intent = new Intent(NewWc.this, MainActivity.class);
+                            //intent.putExtra("NEWWC",newWc);
+                            //startActivity(intent);
 
                             finish();
 

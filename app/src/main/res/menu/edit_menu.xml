@@ -4,6 +4,6 @@
         android:id="@+id/edit_btn"
         android:title=""
         app:showAsAction="always"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@android:drawable/ic_menu_delete"
         />
 </menu>

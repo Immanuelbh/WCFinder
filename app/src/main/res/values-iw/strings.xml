@@ -16,7 +16,7 @@
     <string name="err_cant_take_pic">לא ניתן לצלם</string>
     <string name="no_str">לא</string>
     <string name="yes_str">כן</string>
-    <string name="delete_wc_str">למחוק שירותים?</string>
+    <string name="delete_wc_str">למחוק שירותים</string>
     <string name="delete_wc_msg_1_str">"האם אתה בטוח שברצונך למחוק את "</string>
     <string name="delete_wc_msg_2_str">לצמיתות?</string>
     <string name="err_wc_load">שגיאה - לא ניתן לטעון שירותים אלו</string>
@@ -30,6 +30,20 @@
     <string name="err_wifi_str">הכנס ציון וויפי</string>
     <string name="err_value_range_str">הכנס ערך תיקני (0 - 5)</string>
     <string name="instructions_str">הכנס ציון בין 5 - 0</string>
-    <string name="dialog_edit_title_str">עריכת שירותים</string>
-    <string name="dialog_edit_msg">האם לערוך כרטיסיית שירותים?</string>
+    <string name="dialog_delete_msg">האם למחוק שירותים אלו?</string>
+    <string name="location_str">מיקום</string>
+    <string name="date_str">תאריך</string>
+    <string name="err_add_date">הכנס תאריך</string>
+    <string name="err_add_location">הכנס מיקום</string>
+    <string name="sample1_desc">בניין  8, כניסה צפונית</string>
+    <string name="sample1_location">חולון</string>
+    <string name="sample1_name">HiT</string>
+    <string name="sample2_desc">קרוב לכניסה, מצד ימין</string>
+    <string name="sample2_location">תל אביב</string>
+    <string name="sample2_name">קניון עזריאלי</string>
+    <string name="sample3_desc">בקצה של הפארק, ליד האגם</string>
+    <string name="sample3_location">תל אביב</string>
+    <string name="sample3_name">פארק הירקון</string>
+    <string name="drag_msg">גרור מעלה ומטה!</string>
+    <string name="fav_msg">הוא מועדף חדש!</string>
 </resources>

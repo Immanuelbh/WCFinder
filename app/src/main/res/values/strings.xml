@@ -15,7 +15,7 @@
     <string name="err_add_desc">Please enter a description for the WC</string>
     <string name="err_add_name">Please enter WC name</string>
     <string name="err_cant_take_pic">Cannot take picture</string>
-    <string name="delete_wc_str">Delete WC?</string>
+    <string name="delete_wc_str">Delete WC</string>
     <string name="delete_wc_msg_1_str">Are you sure you want to delete</string>
     <string name="delete_wc_msg_2_str">permanently?</string>
     <string name="err_wc_load">Error - could not load WC</string>
@@ -29,6 +29,20 @@
     <string name="err_odour_str">Enter odour rating</string>
     <string name="err_value_range_str">Enter a valid value (0 - 5)</string>
     <string name="instructions_str">Please enter a value between 0 - 5</string>
-    <string name="dialog_edit_title_str">Edit WC?</string>
-    <string name="dialog_edit_msg">Are you sure you want to edit this WC?</string>
+    <string name="dialog_delete_msg">Are you sure you want to delete this WC?</string>
+    <string name="location_str">Location</string>
+    <string name="date_str">Date</string>
+    <string name="err_add_date">Add a date</string>
+    <string name="err_add_location">Add a location</string>
+    <string name="sample1_name">HiT</string>
+    <string name="sample1_desc">Building 8, north entrance</string>
+    <string name="sample1_location">Holon</string>
+    <string name="sample2_name">Azreali Shopping Mall</string>
+    <string name="sample2_desc">Right near the entrance, on the left side.</string>
+    <string name="sample2_location">Tel Aviv</string>
+    <string name="sample3_name">Park Yarkon</string>
+    <string name="sample3_desc">At the end of the park, next to the pond.</string>
+    <string name="sample3_location">Tel Aviv</string>
+    <string name="drag_msg">You can drag up and down!</string>
+    <string name="fav_msg">is now a favourite!</string>
 </resources>

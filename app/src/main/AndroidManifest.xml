@@ -17,10 +17,9 @@
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"/>
         <activity android:name=".WcActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <activity android:name=".MainActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait">
 
             <intent-filter>

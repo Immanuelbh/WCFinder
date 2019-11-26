@@ -7,6 +7,8 @@
     app:cardUseCompatPadding="true"
     app:elevation="30dp"
     app:cardCornerRadius="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginStart="10dp"
     android:background="@color/orange_light">
 
     <LinearLayout
@@ -23,8 +25,8 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:layout_width="175dp"
-                android:layout_height="175dp"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
                 android:src="@mipmap/ic_launcher"
                 android:layout_gravity="start|fill_horizontal"
                 android:id="@+id/wc_card_img"/>
@@ -60,11 +62,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="22sp"
+                    android:textSize="16sp"
                     android:text="@string/wc_name_str"
                     android:id="@+id/wc_card_name"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="5dp"
+                    android:paddingHorizontal="5dp"
                     />
 
 
@@ -75,27 +78,49 @@
                     android:id="@+id/wc_card_desc"
                     android:layout_below="@id/wc_card_name"
                     android:text="@string/wc_desc_str"
-                    android:textSize="15sp"
-                    android:layout_marginStart="5dp"
+                    android:textSize="12sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_centerHorizontal="true"
                     />
 
-
-
-
-
-
-
-                <TextView
-                    android:id="@+id/wc_card_floor"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:text="@string/wc_floor_str"
-                    android:textSize="20sp"
-                    android:visibility="gone"
-                    />
+                    android:orientation="horizontal"
+                    android:id="@+id/card_icons_bar"
+                    android:layout_above="@id/ratingBar"
+                    android:padding="6dp"
+                    android:paddingTop="8dp"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_clean"
+                        android:layout_weight="1"
+                        android:id="@+id/card_clean"
+                        /><ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_wifi_black"
+                        android:layout_weight="1"
+                        android:id="@+id/card_wifi"
+                        /><ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_paper"
+                        android:layout_weight="1"
+                        android:id="@+id/card_paper"
+                        /><ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_odour"
+                        android:layout_weight="1"
+                        android:id="@+id/card_odour"
+                        />
+
+                </LinearLayout>
 
                 <RatingBar
                     android:layout_width="wrap_content"
@@ -104,11 +129,12 @@
                     style="?android:attr/ratingBarStyleSmall"
                     android:rating="3.5"
                     android:max="5"
-                    android:scaleX="1.2"
-                    android:scaleY="1.2"
+                    android:scaleX="1.4"
+                    android:scaleY="1.4"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="14dp"
+                    android:theme="@style/RatingBar"
                     />
 
             </RelativeLayout>

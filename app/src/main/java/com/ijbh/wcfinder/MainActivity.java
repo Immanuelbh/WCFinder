@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,14 +30,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
-    private static final String KEY_RECYCLER_STATE = "recycler_state";
-    ArrayList<WaterCloset> wcs;
+    WaterClosetManager manager;
     WaterClosetAdapter waterClosetAdapter;
-
     RecyclerView recyclerView;
-    private Bundle bundleRecyclerViewState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,30 +47,27 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        wcs = new ArrayList<>();
+        manager = WaterClosetManager.getInstance(this);
+        waterClosetAdapter = new WaterClosetAdapter(manager.getWcs());
 
-        //TODO change heart icon to boolean value
-        wcs.add(new WaterCloset("Hit", "Building 8", true, R.drawable.wc_img_1, 2, 2, 2, 2));
-        wcs.add(new WaterCloset("Office", "Right at the entrence", false, R.drawable.wc_img_2, 1, 1, 1, 1));
-        wcs.add(new WaterCloset("Microsoft", "At the end of the hall", true, R.drawable.wc_img_2, 1, 2, 3, 4));
-        wcs.add(new WaterCloset("Apple", "Building 11", true, R.drawable.wc_img_1, 3,4,5,3));
-        wcs.add(new WaterCloset("VMWare", "Building 20", false, R.drawable.wc_img_2,3,3,4,5));
-        wcs.add(new WaterCloset("Google", "Building 5", false, R.drawable.wc_img_2,4,2,4,2));
-        wcs.add(new WaterCloset("Hit", "Building 8", false, R.drawable.wc_img_1,2,3,1,1));
-        wcs.add(new WaterCloset("Office", "Right at the entrence", false, R.drawable.wc_img_1,3,1,4,1));
-        wcs.add(new WaterCloset("Microsoft", "At the end of the hall", false, R.drawable.wc_img_2,1,1,1,1));
-        wcs.add(new WaterCloset("Apple", "Building 11", false, R.drawable.wc_img_1,1,2,2,2));
-        wcs.add(new WaterCloset("VMWare", "Building 20", true, R.drawable.wc_img_2,1,2,3,1));
-        wcs.add(new WaterCloset("Google", "Building 5", false, R.drawable.wc_img_1,1,2,3,4));
 
-        waterClosetAdapter = new WaterClosetAdapter(wcs);
+        ////////////////////////
+        /*
+        ArrayList<WaterCloset> sampleWcs = new ArrayList<>();
+        sampleWcs.add(new WaterCloset("Hit", "Building 8", true, R.drawable.wc_img_1, 2, 2, 2, 2));
+        sampleWcs.add(new WaterCloset("Microsoft", "At the end of the hall", true, R.drawable.wc_img_2, 1, 2, 3, 4));
+        sampleWcs.add(new WaterCloset("Apple", "Building 11", true, R.drawable.wc_img_1, 3,4,5,3));
+        */
+
+        ////////////////////////
+
+        addSamples();
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, NewWc.class);
-
-                startActivity(intent);//TODO convert to activity for result
+                startActivity(intent);
             }
         });
 
@@ -82,39 +77,37 @@ public class MainActivity extends AppCompatActivity {
             public void onWcClicked(int position, View view) {
 
                 Intent intent = new Intent(MainActivity.this, WcActivity.class);
-                intent.putExtra("current_wc", wcs.get(position));
+                intent.putExtra("current_wc", position);
+                //intent.putExtra("adapter", waterClosetAdapter);
                 startActivity(intent);
             }
 
             @Override
             public void onFavClick(int position) {
-                boolean currentLike = wcs.get(position).isWcLike();
+                boolean currentLike = manager.getWaterCloset(position).isWcLike();
 
-                wcs.get(position).setWcLike(!currentLike);
+                manager.getWaterCloset(position).setWcLike(!currentLike);
+
+                if(!currentLike){
+                    Toast.makeText(MainActivity.this, manager.getWaterCloset(position).getWcName() + " " + getString(R.string.fav_msg), Toast.LENGTH_SHORT).show();
+                }
+
 
                 waterClosetAdapter.notifyItemChanged(position);
             }
-/*
-
-            @Override
-            public void onWcLongClicked(int position, View view) {
-                wcs.remove(position);
-                waterClosetAdapter.notifyItemRemoved(position);
-            }
-
-
-*/
 
             @Override
             public boolean onItemMove(int fromPosition, int toPosition) {
+                //Toast.makeText(MainActivity.this, R.string.drag_msg, Toast.LENGTH_SHORT).show();
+
                 if(fromPosition < toPosition){
                     for(int i = fromPosition; i < toPosition; i++){
-                        Collections.swap(wcs, i, i+1);
+                        Collections.swap(manager.getWcs(), i, i+1);
                     }
                 }
                 else{
                     for(int i = fromPosition; i > toPosition; i--){
-                        Collections.swap(wcs, i, i-1);
+                        Collections.swap(manager.getWcs(), i, i-1);
                     }
                 }
                 waterClosetAdapter.notifyItemMoved(fromPosition, toPosition);
@@ -148,14 +141,18 @@ public class MainActivity extends AppCompatActivity {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 final RecyclerView.ViewHolder temp = viewHolder;
 
-
+                /*manager.getWcs().remove(temp.getAdapterPosition());
+                waterClosetAdapter.notifyItemRemoved(temp.getAdapterPosition());
+*/
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 alertDialog.setTitle(getString(R.string.delete_wc_str));
-                alertDialog.setMessage(getString(R.string.delete_wc_msg_1_str)+wcs.get(viewHolder.getAdapterPosition()).getWcName()+ getString(R.string.delete_wc_msg_2_str));
+                alertDialog.setMessage(getString(R.string.delete_wc_msg_1_str) + " " + manager.getWaterCloset(viewHolder.getAdapterPosition()).getWcName() + " " + getString(R.string.delete_wc_msg_2_str));
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.yes_str), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int position) {
-                        wcs.remove(temp.getAdapterPosition());
+                        manager.removeWaterCloset(temp.getAdapterPosition());
+                        //manager.getWcs().remove(temp.getAdapterPosition());
+                        //wcs.remove(temp.getAdapterPosition());
                         waterClosetAdapter.notifyItemRemoved(temp.getAdapterPosition());
                     }
                 });
@@ -169,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
                 alertDialog.show();
 
+
             }
         };
 
@@ -180,70 +178,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void addSamples() {
+
+        manager.addWaterCloset(new WaterCloset(getString(R.string.sample1_name), getString(R.string.sample1_desc), getString(R.string.sample1_location), "1/1/19", true, R.drawable.sample_img_1, 2, 2, 5, 5));
+        manager.addWaterCloset(new WaterCloset(getString(R.string.sample3_name), getString(R.string.sample3_desc), getString(R.string.sample3_location), "8/8/18", false, R.drawable.sample_img_2, 1,4,5,1));
+        manager.addWaterCloset(new WaterCloset(getString(R.string.sample2_name), getString(R.string.sample2_desc),getString(R.string.sample2_location), "2/3/19",  true, R.drawable.sample_img_3, 1, 5, 3, 4));
+
+    }
+
+    private void removeSamples() {
+        //manager.removeWaterCloset();
+
+    }
+
+/*
+
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-
-        WaterCloset newWc = (WaterCloset) intent.getSerializableExtra("NEWWC");
-        //wcs.add(newWc); //can't use because of bitmap
-        //Toast.makeText(this, newWc.getWcName()+"is the new WC", Toast.LENGTH_SHORT).show();
-
-        try {
-            FileOutputStream fos = openFileOutput("new_wc", MODE_PRIVATE);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(newWc);
-            oos.close();
-
-            wcs.add(newWc);
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
+    protected void onDestroy() {
+        super.onDestroy();
+        for(int i = 0; i < manager.getWcs().size(); i++){
+            manager.removeWaterCloset(i);
         }
-
+        //manager.getWcs().clear();
         waterClosetAdapter.notifyDataSetChanged();
-        //TODO update the list.
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        bundleRecyclerViewState = new Bundle();
-        try{
-            Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
-            bundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE,listState);
-
-        }catch (NullPointerException npe){
-            Toast.makeText(this, "Error loading listState", Toast.LENGTH_SHORT).show();
-        }
 
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        super.onPause();
-        bundleRecyclerViewState = new Bundle();
-        try{
-            Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
-            bundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE,listState);
+*/
 
-        }catch (NullPointerException npe){
-            Toast.makeText(this, "Error loading listState", Toast.LENGTH_SHORT).show();
-        }
-
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        //manager.saveWaterClosets();
+        waterClosetAdapter.notifyDataSetChanged();
 
-        if (bundleRecyclerViewState != null) {
-            Parcelable listState = bundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
-            Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(listState);
-            //TODO check if this is correct
-        }
     }
+
+
 }

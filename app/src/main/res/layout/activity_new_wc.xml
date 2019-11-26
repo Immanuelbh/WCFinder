@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/colorAccent"
+    android:background="@color/orange_medium"
 
     >
 
@@ -47,6 +47,73 @@
 
                 />
         </RelativeLayout>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:padding="3dp"
+            android:background="@color/cardview_dark_background"
+            android:rowCount="1"
+            android:columnCount="2"
+            >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:id="@+id/add_address"
+                android:layout_weight="1"
+
+                >
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    app:srcCompat="@drawable/ic_place"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    />
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:textColor="@android:color/white"
+                    android:hint="@string/location_str"
+                    android:textColorHint="@android:color/white"
+                    android:inputType="text"
+                    android:id="@+id/wc_location"
+                    android:layout_gravity="center"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:id="@+id/add_date"
+                >
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    app:srcCompat="@drawable/ic_insert_invitation"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    android:textSize="19sp"
+                    android:text="@string/date_str"
+                    android:id="@+id/wc_date"
+                    />
+            </LinearLayout>
+
+
+        </TableRow>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -91,7 +158,7 @@
                 android:gravity="start|top"
                 android:hint="@string/wc_desc_str"
                 android:inputType="textMultiLine"
-                android:minLines="5"
+                android:minLines="3"
                 android:padding="25dp"
                 android:scrollbars="vertical"
                 android:layout_below="@id/wc_new_name"
@@ -103,7 +170,7 @@
                 android:text="@string/instructions_str"
                 android:id="@+id/instructions"
                 android:layout_below="@+id/wc_new_desc"
-                android:textSize="19sp"
+                android:textSize="16sp"
                 android:gravity="center"
                 android:layout_marginTop="12dp"
                 />
@@ -139,7 +206,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_layers_black_24dp"
+                        app:srcCompat="@drawable/ic_paper"
                         android:layout_weight="1"
 
                         />
@@ -166,6 +233,7 @@
                         android:id="@+id/new_clean"
                         android:inputType="number"
                         android:focusedByDefault="false"
+                        android:textSize="14sp"
 
                         />
                     <EditText
@@ -177,6 +245,7 @@
                         android:id="@+id/new_wifi"
                         android:inputType="number"
                         android:focusedByDefault="false"
+                        android:textSize="14sp"
 
                         />
                     <EditText
@@ -188,6 +257,7 @@
                         android:id="@+id/new_paper"
                         android:inputType="number"
                         android:focusedByDefault="false"
+                        android:textSize="14sp"
 
                         />
                     <EditText
@@ -199,29 +269,13 @@
                         android:id="@+id/new_odour"
                         android:inputType="number"
                         android:focusedByDefault="false"
+                        android:textSize="14sp"
 
                         />
                 </LinearLayout>
 
 
             </LinearLayout>
-
-            <Button
-                android:id="@+id/save_wc_btn"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_below="@id/icon_bar"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/buttonshape_selector"
-                android:shadowColor="#A8A8A8"
-                android:shadowDx="0"
-                android:shadowDy="0"
-                android:shadowRadius="5"
-                android:text="@string/save_str"
-                android:textColor="#000000"
-                android:textSize="30sp" />
 
         </RelativeLayout>
 

@@ -3,98 +3,195 @@ package com.ijbh.wcfinder;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class WcActivity extends AppCompatActivity {
 
     private String wcName, wcDesc, wcFloor;
-    private WaterCloset wc;
-    private ImageView imgIv, likeIv;
-    private TextView wcNameTv, wcDescTv, cleanTv, wifiTv, paperTv, odourTv;//, wcFloorTv;
-
+    //private WaterCloset wc;
+    private ImageView imgIv, likeIv, cleanIv, wifiIv, paperIv, odourIv;
+    private TextView wcNameTv, wcDescTv, wcLocationTv, wcDateTv, cleanTv, wifiTv, paperTv, odourTv;
+    private LinearLayout locationLl;
+    private WaterCloset waterCloset;
+    private int wcPosition;
+    private boolean likeWC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wc);
 
+        wcPosition = getIntent().getIntExtra("current_wc", 0);
+        waterCloset = WaterClosetManager.getInstance(this).getWaterCloset(wcPosition);
+
         imgIv = findViewById(R.id.wc_image_large);
         likeIv = findViewById(R.id.wc_like_large);
+        cleanIv = findViewById(R.id.wc_clean_icon);
+        wifiIv = findViewById(R.id.wc_wifi_icon);
+        paperIv = findViewById(R.id.wc_paper_icon);
+        odourIv = findViewById(R.id.wc_odour_icon);
+
         wcNameTv = findViewById(R.id.wc_name_large);
         wcDescTv = findViewById(R.id.wc_desc_large);
-        //wcFloorTv = findViewById(R.id.wc_current_floor);
+        wcLocationTv = findViewById(R.id.wc_location_large);
+        locationLl = findViewById(R.id.show_address);
+        wcDateTv = findViewById(R.id.wc_date_large);
         cleanTv = findViewById(R.id.clean_large);
         wifiTv = findViewById(R.id.wifi_large);
         paperTv = findViewById(R.id.paper_large);
         odourTv = findViewById(R.id.odour_large);
         imgIv = findViewById(R.id.wc_image_large);
 
-        Intent intent = getIntent();
-        wc = (WaterCloset) intent.getSerializableExtra("current_wc");
+
+        //Intent intent = getIntent();
+        //waterCloset = (WaterCloset) intent.getSerializableExtra("current_wc");
         //WaterCloset newWc = (WaterCloset) intent.getSerializableExtra("NEWWC");
 
-        if(wc != null){
-            //Toast.makeText(this, wc.getWcFloor()+" is current", Toast.LENGTH_SHORT).show();
-            wcNameTv.setText(wc.getWcName());
-            wcDescTv.setText(wc.getWcDescription());
-            cleanTv.setText(wc.getInd_clean()+"");
-            wifiTv.setText(wc.getInd_wifi()+"");
-            paperTv.setText(wc.getInd_paper()+"");
-            odourTv.setText(wc.getInd_odour()+"");
+        if(waterCloset != null){
+
+            likeWC = waterCloset.isWcLike();
+
+            wcNameTv.setText(waterCloset.getWcName());
+            wcDescTv.setText(waterCloset.getWcDescription());
+            wcLocationTv.setText(waterCloset.getWcLocation());
+            wcDateTv.setText(waterCloset.getWcDate());
+            cleanTv.setText(waterCloset.getInd_clean()+"");
+            wifiTv.setText(waterCloset.getInd_wifi()+"");
+            paperTv.setText(waterCloset.getInd_paper()+"");
+            odourTv.setText(waterCloset.getInd_odour()+"");
+
 
             //wcFloorTv.setText(wc.getWcFloor()+"");
 
-            if(wc.isWcLike()){
+            if(likeWC){
                 likeIv.setImageResource(R.drawable.ic_favorite_red_24dp);
             }
             else{
                 likeIv.setImageResource(R.drawable.ic_favorite_border_black_24dp);
             }
 
-            if(wc.getWcResId()!= 0){ //existing image
-                imgIv.setImageResource(wc.getWcResId());
+            if(waterCloset.getWcResId()!= 0){ //existing image
+                imgIv.setImageResource(waterCloset.getWcResId());
             }
             else{ // user created image
-                Bitmap bitmap = BitmapFactory.decodeFile(wc.getWcUriPath());
+                Bitmap bitmap = BitmapFactory.decodeFile(waterCloset.getWcUriPath());
                 imgIv.setImageBitmap(bitmap);
                 //imgIv.setImageBitmap(wc.getWcBitmap());
             }
 
-            cleanTv.setOnClickListener(new View.OnClickListener() {
+            likeIv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    likeWC = !likeWC;
+                    waterCloset.setWcLike(likeWC);
+
+
+                    if(likeWC){
+                        likeIv.setImageResource(R.drawable.ic_favorite_red_24dp);
+                    }
+                    else{
+                        likeIv.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                    }
+
+                }
+            });
+
+            locationLl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String name = wcNameTv.getText().toString();
+                    String address = wcLocationTv.getText().toString();
+
+                    try{
+
+                        Intent showLocationIntent = new Intent(Intent.ACTION_VIEW);
+                        showLocationIntent.setData(Uri.parse("https://waze.com/ul?q="+ name + " " + address));
+                        startActivity(showLocationIntent);
+                    }catch (ActivityNotFoundException e) {
+                        Intent noWazeIntent = new Intent(Intent.ACTION_VIEW);
+                        noWazeIntent.setData(Uri.parse("market://id=com.waze"));
+                        startActivity(noWazeIntent);
+
+                    }
+
+                }
+            });
+
+            double cleanRating = waterCloset.getInd_clean();
+            double wifiRating = waterCloset.getInd_wifi();
+            double paperRating = waterCloset.getInd_paper();
+            double odourRating = waterCloset.getInd_odour();
+
+            if(cleanRating > 4){
+                cleanIv.setImageResource(R.drawable.ic_clean_green);
+            }
+            else if(cleanRating < 1.5){
+                cleanIv.setImageResource(R.drawable.ic_clean_red);
+            }
+
+            if(wifiRating > 4){
+                wifiIv.setImageResource(R.drawable.ic_wifi_green);
+            }
+            else if(wifiRating < 1.5){
+                wifiIv.setImageResource(R.drawable.ic_wifi_red);
+            }
+
+            if(paperRating > 4){
+                paperIv.setImageResource(R.drawable.ic_paper_green);
+            }
+            else if(paperRating < 1.5){
+                paperIv.setImageResource(R.drawable.ic_paper_red);
+
+            }
+
+            if(odourRating > 4) {
+                odourIv.setImageResource(R.drawable.ic_odour_green);
+            }
+            else if(odourRating < 1.5) {
+                odourIv.setImageResource(R.drawable.ic_odour_red);
+            }
+
+            cleanIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(WcActivity.this, R.string.hint_clean_str, Toast.LENGTH_SHORT).show();
                 }
             });
-            wifiTv.setOnClickListener(new View.OnClickListener() {
+            wifiIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(WcActivity.this, R.string.hint_wifi_str, Toast.LENGTH_SHORT).show();
                 }
             });
-            paperTv.setOnClickListener(new View.OnClickListener() {
+            paperIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(WcActivity.this, R.string.hint_paper_str, Toast.LENGTH_SHORT).show();
                 }
             });
-            odourTv.setOnClickListener(new View.OnClickListener() {
+            odourIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(WcActivity.this, R.string.hint_odour_str, Toast.LENGTH_SHORT).show();
                 }
             });
+
+
         }
         else{
             Toast.makeText(this, R.string.err_wc_load, Toast.LENGTH_SHORT).show();
@@ -121,8 +218,8 @@ public class WcActivity extends AppCompatActivity {
 
 
             AlertDialog alertDialog = new AlertDialog.Builder(WcActivity.this).create();
-            alertDialog.setTitle(getString(R.string.dialog_edit_title_str));
-            alertDialog.setMessage(getString(R.string.dialog_edit_msg));
+            alertDialog.setTitle(getString(R.string.delete_wc_str));
+            alertDialog.setMessage(getString(R.string.dialog_delete_msg));
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.yes_str), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int position) {
@@ -141,9 +238,16 @@ public class WcActivity extends AppCompatActivity {
                     intent.putExtra("NEWWC",newWc);
                     startActivity(intent);
 */
-                    Intent intent = new Intent(WcActivity.this, NewWc.class);
-                    intent.putExtra("edit_wc", wc);
-                    startActivity(intent);
+                    WaterClosetManager manager = WaterClosetManager.getInstance(WcActivity.this);
+                    manager.removeWaterCloset(wcPosition);
+                    manager.saveWaterClosets();
+                    //WaterClosetAdapter adapter =
+
+                    finish();
+
+                    //Intent intent = new Intent(WcActivity.this, NewWc.class);
+                    //intent.putExtra("edit_wc", wc);//not needed if used
+                    //startActivity(intent);
 
                     //finish();
 
