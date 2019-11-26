@@ -1,0 +1,10 @@
+[ ] edit page for created wc
+[ ] adding icons - wifi, clean rank, ..
+[ ] extra images button
+[ ] sliding images
+[ ] zoom in image
+[ ] save button to fab?
+
+[x] heart icon change on click
+[x] passing correct info to constractor 
+[x] designing edittext boxes
