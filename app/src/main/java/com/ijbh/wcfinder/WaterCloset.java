@@ -17,54 +17,31 @@ import java.io.Serializable;
 public class WaterCloset implements Serializable {
 
     private String wcName, wcDescription, wcUriPath;
-    private int wcFloor, wcResId = 0;//, wcLikeId;
+    private int wcResId = 0;
     private boolean wcLike = false;
-    transient private Bitmap wcBitmap;
     private double ind_clean = 0.0, ind_wifi = 0.0, ind_paper = 0.0, ind_odour = 0.0;
     private double overallScore = 0.0;
-    // private Bitmap wcIconBitmap;
+    transient private Bitmap wcBitmap;
+    private Bitmap wcIconBitmap;
 
+    public WaterCloset(){}
 
-    //NOT IN USE
-    public WaterCloset(String wcName, String wcDescription, int wcFloor, boolean wcLike, int wcResId) {
-        this.wcName = wcName;
-        this.wcDescription = wcDescription;
-        this.wcFloor = wcFloor;
-        this.wcResId = wcResId;
-        //this.wcLikeId = wcLikeId;
-        this.wcLike = wcLike;
-    }
     public WaterCloset(String wcName, String wcDescription, boolean wcLike, int wcResId, double clean, double wifi, double paper, double odour) {
         this.wcName = wcName;
         this.wcDescription = wcDescription;
-        this.wcFloor = wcFloor;
         this.wcResId = wcResId;
-        //this.wcLikeId = wcLikeId;
         this.wcLike = wcLike;
         this.ind_clean = clean;
         this.ind_wifi = wifi;
         this.ind_paper = paper;
         this.ind_odour = odour;
-        this.overallScore = (clean + wifi + paper + odour)/4;
+        this.overallScore = (clean + wifi + paper + odour)/4.0;
     }
 
-    //NOT IN USE
-    public WaterCloset(String wcName, String wcDesc, int wcFloor, boolean b, String currentImagePath) {
-        this.wcName = wcName;
-        this.wcDescription = wcDesc;
-        this.wcFloor = wcFloor;
-        //this.wcBitmap = wcBitmap;
-        this.wcUriPath = currentImagePath;
-        compressBitmap(currentImagePath);
-        //wcBitmap = compressBitmap(currentImagePath);
-        //this.wcLikeId = likeId;
-        this.wcLike = b;
-    }
 
     public WaterCloset(String wcName, String wcDesc, boolean wcLike, String currentImagePath, double ind_clean, double ind_wifi, double ind_paper, double ind_odour) {
         this.wcName = wcName;
         this.wcDescription = wcDesc;
-        //this.wcFloor = wcFloor;
         this.wcUriPath = currentImagePath;
         compressBitmap(currentImagePath);
         this.wcLike = wcLike;
@@ -72,13 +49,12 @@ public class WaterCloset implements Serializable {
         this.ind_wifi = ind_wifi;
         this.ind_paper = ind_paper;
         this.ind_odour = ind_odour;
-        this.overallScore = (ind_clean + ind_wifi + ind_paper + ind_odour)/4;
+        this.overallScore = (ind_clean + ind_wifi + ind_paper + ind_odour)/4.0;
     }
 
     private void compressBitmap(String path) {
         Bitmap bitmap = BitmapFactory.decodeFile(path);
 
-        //Glide.with()
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 25, stream);
         byte[] byteArray = stream.toByteArray();
@@ -106,14 +82,6 @@ public class WaterCloset implements Serializable {
 
     public void setWcDescription(String wcDescription) {
         this.wcDescription = wcDescription;
-    }
-
-    public int getWcFloor() {
-        return wcFloor;
-    }
-
-    public void setWcFloor(int wcFloor) {
-        this.wcFloor = wcFloor;
     }
 
     public boolean isWcLike() {
@@ -192,10 +160,13 @@ public class WaterCloset implements Serializable {
 */
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+
         if (wcBitmap != null) {
             wcBitmap.compress(Bitmap.CompressFormat.JPEG, 25, out);
             //wcIconBitmap.compress(Bitmap.CompressFormat.JPEG,100,out);
         }
+
+        //wcIconBitmap.compress(Bitmap.CompressFormat.JPEG, 50,out);
         out.defaultWriteObject();
     }
 
