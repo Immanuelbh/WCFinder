@@ -21,6 +21,8 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,14 +47,15 @@ public class NewWc extends AppCompatActivity {
 
     private ImageView wcImgIv;
     private File imgFile;
-    private Button firstPicBtn;
-    private Button addPicBtn;
+    private Button firstPicBtn, addPicBtn;
     private WaterCloset newWc;
     private Bitmap wcBitmap = null;
     private String wcName, wcDesc;
-    private int wcFloor;
+    //private int wcFloor;
     private String currentImagePath;
     private boolean wcLike = false;
+    private double ind_clean = 0.0, ind_wifi = 0.0, ind_paper = 0.0, ind_odour = 0.0;
+    EditText wcNameEt, wcDescEt, cleanEt, wifiEt, paperEt, odourEt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,25 +66,27 @@ public class NewWc extends AppCompatActivity {
 
         firstPicBtn = findViewById(R.id.first_pic_btn);
         addPicBtn = findViewById(R.id.add_pic_btn);
-        final EditText wcNameEt = findViewById(R.id.wc_new_name);
-        final EditText wcFloorEt = findViewById(R.id.wc_new_floor);
-        final EditText wcDescEt = findViewById(R.id.wc_new_desc);
+        wcNameEt = findViewById(R.id.wc_new_name);
+        wcDescEt = findViewById(R.id.wc_new_desc);
+        //final EditText wcFloorEt = findViewById(R.id.wc_new_floor);
         Button saveWcBtn = findViewById(R.id.save_wc_btn);
         final ImageView wcLikeIv = findViewById(R.id.wc_new_like);
-
+        cleanEt = findViewById(R.id.new_clean);
+        wifiEt = findViewById(R.id.new_wifi);
+        paperEt = findViewById(R.id.new_paper);
+        odourEt = findViewById(R.id.new_odour);
 
 
         firstPicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Build.VERSION.SDK_INT >= 23){
+                if (Build.VERSION.SDK_INT >= 23) {
                     int hasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-                    if(hasWritePermission != PackageManager.PERMISSION_GRANTED){
+                    if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
                         Toast.makeText(NewWc.this, R.string.no_permissions_str, Toast.LENGTH_SHORT).show();
-                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},WRITE_PERMISSION_REQUEST);
-                    }
-                    else {
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_PERMISSION_REQUEST);
+                    } else {
 
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         try {
@@ -90,15 +95,14 @@ public class NewWc extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                        if(imgFile != null){
-                            Uri imgUri = FileProvider.getUriForFile(NewWc.this, getPackageName()+".provider",imgFile);
+                        if (imgFile != null) {
+                            Uri imgUri = FileProvider.getUriForFile(NewWc.this, getPackageName() + ".provider", imgFile);
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
                             startActivityForResult(intent, CAMERA_REQUEST);
                         }
 
                     }
-                }
-                else{
+                } else {
                     Toast.makeText(NewWc.this, R.string.low_sdk_str, Toast.LENGTH_SHORT).show();
                 }
 
@@ -108,78 +112,123 @@ public class NewWc extends AppCompatActivity {
         wcLikeIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(wcLike){
+                if (wcLike) {
                     wcLikeIv.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                     wcLike = false;
-                }
-                else{
+                } else {
                     wcLikeIv.setImageResource(R.drawable.ic_favorite_red_24dp);
                     wcLike = true;
                 }
             }
         });
-
+/*
         saveWcBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(!(isEmpty(wcNameEt))){
-                    if(!(isEmpty(wcDescEt))){
-                        if(!(isEmpty(wcFloorEt))){
-                            if(wcBitmap != null){
+                if(fieldsAreValid()){
+                    if(wcBitmap != null){
 
-                                //TODO get the hebrew text -
-                                AlertDialog alertDialog = new AlertDialog.Builder(NewWc.this).create();
-                                alertDialog.setTitle(getString(R.string.dialog_new_save_str));
-                                alertDialog.setMessage(getString(R.string.dialog_msg_new_wc_str));
-                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.yes_str), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int position) {
+                        AlertDialog alertDialog = new AlertDialog.Builder(NewWc.this).create();
+                        alertDialog.setTitle(getString(R.string.dialog_new_save_str));
+                        alertDialog.setMessage(getString(R.string.dialog_msg_new_wc_str));
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.yes_str), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int position) {
 
-                                        wcName = wcNameEt.getText().toString();
-                                        wcDesc = wcDescEt.getText().toString();
-                                        wcFloor = Integer.parseInt(wcFloorEt.getText().toString());
+                                wcName = wcNameEt.getText().toString();
+                                wcDesc = wcDescEt.getText().toString();
+                                //wcFloor = Integer.parseInt(wcFloorEt.getText().toString());
+                                ind_clean = Integer.parseInt(cleanEt.getText().toString());
+                                ind_wifi = Integer.parseInt(wifiEt.getText().toString());
+                                ind_paper = Integer.parseInt(paperEt.getText().toString());
+                                ind_odour = Integer.parseInt(odourEt.getText().toString());
 
+                                //newWc = new WaterCloset(wcName, wcDesc, wcFloor, wcLike, currentImagePath);
+                                newWc = new WaterCloset(wcName, wcDesc, wcLike, currentImagePath, ind_clean, ind_wifi, ind_paper, ind_odour);
+                                Intent intent = new Intent(NewWc.this, MainActivity.class);
+                                intent.putExtra("NEWWC",newWc);
+                                startActivity(intent);
 
-                                        newWc = new WaterCloset(wcName, wcDesc, wcFloor, wcLike, currentImagePath);
-                                        Intent intent = new Intent(NewWc.this, MainActivity.class);
-                                        intent.putExtra("NEWWC",newWc);
-                                        startActivity(intent);
+                                finish();
 
-                                        finish();
-
-                                    }
-                                });
-                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.no_str), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int position) {
-                                        //do nothing
-
-                                    }
-                                });
-
-                                alertDialog.show();
                             }
-                            else{
-                                Toast.makeText(NewWc.this, getString(R.string.err_add_pic_str), Toast.LENGTH_SHORT).show();
+                        });
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.no_str), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int position) {
+                                //do nothing
+
                             }
-                        }
-                        else{
-                            wcFloorEt.setError(getString(R.string.err_add_floor));
-                        }
+                        });
+
+                        alertDialog.show();
                     }
                     else{
-                        wcDescEt.setError(getString(R.string.err_add_desc));
+                        Toast.makeText(NewWc.this, getString(R.string.err_add_pic_str), Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{
-                    wcNameEt.setError(getString(R.string.err_add_name));
+                    sendError();
                 }
 
 
             }
         });
 
+    */
+    }
+
+    private boolean fieldsAreValid() {
+        //fields not empty
+        /*if(isEmpty(wcNameEt)||){
+            return false;
+        }*/
+        if((isEmpty(wcNameEt) || isEmpty(wcDescEt) || isEmpty(cleanEt) || isEmpty(wifiEt) || isEmpty(paperEt) || isEmpty(odourEt))){
+            return false;
+        }
+
+        //values are between 0-5
+        if(!validValue(cleanEt) || !validValue(wifiEt) || !validValue(paperEt) || !validValue(odourEt)){
+            return false;
+        }
+        return true;
+    }
+
+    private void sendError() {
+        if(isEmpty(wcNameEt)){
+            wcNameEt.setError(getString(R.string.err_add_name));
+            Toast.makeText(this, R.string.err_add_name, Toast.LENGTH_SHORT).show();
+        }
+        else if(isEmpty(wcDescEt)){
+            wcDescEt.setError(getString(R.string.err_add_desc));
+            Toast.makeText(this, R.string.err_add_desc, Toast.LENGTH_SHORT).show();
+
+        }
+        else if(isEmpty(cleanEt)){
+            cleanEt.setError(getString(R.string.err_clean_str));
+            Toast.makeText(this, R.string.err_clean_str, Toast.LENGTH_SHORT).show();
+
+        }
+        else if(isEmpty(wifiEt)){
+            wifiEt.setError(getString(R.string.err_wifi_str));
+            Toast.makeText(this, R.string.err_wifi_str, Toast.LENGTH_SHORT).show();
+
+        }
+        else if (isEmpty(paperEt)){
+            paperEt.setError(getString(R.string.err_paper_str));
+
+        }
+        else if(isEmpty(odourEt)){
+            odourEt.setError(getString(R.string.err_odour_str));
+            Toast.makeText(this, R.string.err_odour_str, Toast.LENGTH_SHORT).show();
+
+        }
+        else{
+            if(!validValue(cleanEt) || !validValue(wifiEt) || !validValue(paperEt) || !validValue(odourEt)){
+                Toast.makeText(this, R.string.err_value_range_str, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 
@@ -231,5 +280,76 @@ public class NewWc extends AppCompatActivity {
 
     private boolean isEmpty(EditText etText) {
         return etText.getText().toString().trim().length() == 0;
+    }
+    private boolean validValue(EditText etText) {
+        if(isEmpty(etText)){
+            return false;
+        }
+        else{
+            double value = Double.parseDouble(etText.getText().toString());
+            if(value >=0 && value <= 5){
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.save_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.save_btn){
+            if(fieldsAreValid()){
+                if(wcBitmap != null){
+                    AlertDialog alertDialog = new AlertDialog.Builder(NewWc.this).create();
+                    alertDialog.setTitle(getString(R.string.dialog_new_save_str));
+                    alertDialog.setMessage(getString(R.string.dialog_msg_new_wc_str));
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.yes_str), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int position) {
+
+                            wcName = wcNameEt.getText().toString();
+                            wcDesc = wcDescEt.getText().toString();
+                            ind_clean = Integer.parseInt(cleanEt.getText().toString());
+                            ind_wifi = Integer.parseInt(wifiEt.getText().toString());
+                            ind_paper = Integer.parseInt(paperEt.getText().toString());
+                            ind_odour = Integer.parseInt(odourEt.getText().toString());
+
+                            newWc = new WaterCloset(wcName, wcDesc, wcLike, currentImagePath, ind_clean, ind_wifi, ind_paper, ind_odour);
+                            Intent intent = new Intent(NewWc.this, MainActivity.class);
+                            intent.putExtra("NEWWC",newWc);
+                            startActivity(intent);
+
+                            finish();
+
+                        }
+                    });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.no_str), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int position) {
+                            //do nothing
+
+                        }
+                    });
+
+                    alertDialog.show();
+                }
+                else{
+                    Toast.makeText(NewWc.this, getString(R.string.err_add_pic_str), Toast.LENGTH_SHORT).show();
+                }
+            }
+            else{
+                sendError();
+            }
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

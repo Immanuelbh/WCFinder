@@ -52,18 +52,18 @@ public class MainActivity extends AppCompatActivity {
         wcs = new ArrayList<>();
 
         //TODO change heart icon to boolean value
-        wcs.add(new WaterCloset("Hit", "Building 8", 1, true, R.drawable.wc_img_1));
-        wcs.add(new WaterCloset("Office", "Right at the entrence", 2, false, R.drawable.wc_img_2));
-        wcs.add(new WaterCloset("Microsoft", "At the end of the hall", 5, true, R.drawable.wc_img_2));
-        wcs.add(new WaterCloset("Apple", "Building 11", 9, true, R.drawable.wc_img_1));
-        wcs.add(new WaterCloset("VMWare", "Building 20", 11, false, R.drawable.wc_img_2));
-        wcs.add(new WaterCloset("Google", "Building 5", 4, false, R.drawable.wc_img_2));
-        wcs.add(new WaterCloset("Hit", "Building 8", 2, false, R.drawable.wc_img_1));
-        wcs.add(new WaterCloset("Office", "Right at the entrence", 2, false, R.drawable.wc_img_1));
-        wcs.add(new WaterCloset("Microsoft", "At the end of the hall", 2, false, R.drawable.wc_img_2));
-        wcs.add(new WaterCloset("Apple", "Building 11", 6, false, R.drawable.wc_img_1));
-        wcs.add(new WaterCloset("VMWare", "Building 20", 3, true, R.drawable.wc_img_2));
-        wcs.add(new WaterCloset("Google", "Building 5", 9, false, R.drawable.wc_img_1));
+        wcs.add(new WaterCloset("Hit", "Building 8", true, R.drawable.wc_img_1, 2, 2, 2, 2));
+        wcs.add(new WaterCloset("Office", "Right at the entrence", false, R.drawable.wc_img_2, 1, 1, 1, 1));
+        wcs.add(new WaterCloset("Microsoft", "At the end of the hall", true, R.drawable.wc_img_2, 1, 2, 3, 4));
+        wcs.add(new WaterCloset("Apple", "Building 11", true, R.drawable.wc_img_1, 3,4,5,3));
+        wcs.add(new WaterCloset("VMWare", "Building 20", false, R.drawable.wc_img_2,3,3,4,5));
+        wcs.add(new WaterCloset("Google", "Building 5", false, R.drawable.wc_img_2,4,2,4,2));
+        wcs.add(new WaterCloset("Hit", "Building 8", false, R.drawable.wc_img_1,2,3,1,1));
+        wcs.add(new WaterCloset("Office", "Right at the entrence", false, R.drawable.wc_img_1,3,1,4,1));
+        wcs.add(new WaterCloset("Microsoft", "At the end of the hall", false, R.drawable.wc_img_2,1,1,1,1));
+        wcs.add(new WaterCloset("Apple", "Building 11", false, R.drawable.wc_img_1,1,2,2,2));
+        wcs.add(new WaterCloset("VMWare", "Building 20", true, R.drawable.wc_img_2,1,2,3,1));
+        wcs.add(new WaterCloset("Google", "Building 5", false, R.drawable.wc_img_1,1,2,3,4));
 
         waterClosetAdapter = new WaterClosetAdapter(wcs);
 

@@ -20,4 +20,16 @@
     <string name="delete_wc_msg_1_str">"האם אתה בטוח שברצונך למחוק את "</string>
     <string name="delete_wc_msg_2_str">לצמיתות?</string>
     <string name="err_wc_load">שגיאה - לא ניתן לטעון שירותים אלו</string>
+    <string name="hint_clean_str">ניקיון</string>
+    <string name="hint_odour_str">ריח</string>
+    <string name="hint_paper_str">נייר</string>
+    <string name="hint_wifi_str">וויפי</string>
+    <string name="err_clean_str">הכנס ציון ניקיון</string>
+    <string name="err_odour_str">הכנס ציון ריח</string>
+    <string name="err_paper_str">הכנס איכות נייר</string>
+    <string name="err_wifi_str">הכנס ציון וויפי</string>
+    <string name="err_value_range_str">הכנס ערך תיקני (0 - 5)</string>
+    <string name="instructions_str">הכנס ציון בין 5 - 0</string>
+    <string name="dialog_edit_title_str">עריכת שירותים</string>
+    <string name="dialog_edit_msg">האם לערוך כרטיסיית שירותים?</string>
 </resources>

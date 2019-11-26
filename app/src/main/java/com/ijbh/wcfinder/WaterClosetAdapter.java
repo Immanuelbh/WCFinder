@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -50,16 +51,18 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
     public class WCViewHolder extends RecyclerView.ViewHolder {
 
         ImageView wcCardImgIv, wcCardLikeIv;
-        TextView wcCardNameTv, wcCardDescTv, wcCardFloorTv;
+        TextView wcCardNameTv, wcCardDescTv;//, wcCardFloorTv;
+        RatingBar rBar;
 
         public WCViewHolder(@NonNull View itemView) {
             super(itemView);
 
             wcCardNameTv = itemView.findViewById(R.id.wc_card_name);
             wcCardDescTv = itemView.findViewById(R.id.wc_card_desc);
-            wcCardFloorTv = itemView.findViewById(R.id.wc_card_floor);
+            //wcCardFloorTv = itemView.findViewById(R.id.wc_card_floor);
             wcCardImgIv = itemView.findViewById(R.id.wc_card_img);
             wcCardLikeIv = itemView.findViewById(R.id.wc_card_like);
+            rBar = itemView.findViewById(R.id.ratingBar);
 
             wcCardLikeIv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -153,7 +156,8 @@ public class WaterClosetAdapter extends RecyclerView.Adapter<WaterClosetAdapter.
 
         holder.wcCardNameTv.setText(waterCloset.getWcName());
         holder.wcCardDescTv.setText(waterCloset.getWcDescription());
-        holder.wcCardFloorTv.setText(waterCloset.getWcFloor()+"");
+        holder.rBar.setRating((float) waterCloset.getOverallScore());
+        //holder.wcCardFloorTv.setText(waterCloset.getWcFloor()+"");
 
         if(waterCloset.isWcLike()){
             holder.wcCardLikeIv.setImageResource(R.drawable.ic_favorite_red_24dp);

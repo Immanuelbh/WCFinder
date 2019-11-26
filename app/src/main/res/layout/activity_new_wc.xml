@@ -48,81 +48,171 @@
                 />
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="15dp">
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/wc_new_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:layout_weight="4"
+                android:background="@drawable/bg_edittext_top"
+                android:focusedByDefault="false"
+                android:hint="@string/wc_name_str"
+                android:inputType="text"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:textSize="22sp"
+                android:gravity="center"
+                />
+            <ImageView
+                android:id="@+id/wc_new_like"
+                android:layout_width="96px"
+                android:layout_height="96px"
+                android:layout_marginStart="10dp"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/ic_favorite_border_black_24dp"
+                android:layout_alignRight="@id/wc_new_name"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
 
-                <EditText
-                    android:id="@+id/wc_new_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="15dp"
-                    android:layout_weight="4"
-                    android:background="@drawable/bg_edittext"
-                    android:focusedByDefault="false"
-                    android:hint="@string/wc_name_str"
-                    android:inputType="text"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
-                    android:textSize="22sp" />
+                />
 
-                <EditText
-                    android:id="@+id/wc_new_floor"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_edittext"
-                    android:focusedByDefault="false"
-                    android:hint="@string/wc_floor_str"
-                    android:inputType="number"
-                    android:textAlignment="center" />
-            </LinearLayout>
 
             <EditText
                 android:id="@+id/wc_new_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bg_edittext_top"
+                android:background="@drawable/bg_edittext_bottom"
                 android:focusedByDefault="false"
                 android:gravity="start|top"
                 android:hint="@string/wc_desc_str"
                 android:inputType="textMultiLine"
                 android:minLines="5"
                 android:padding="25dp"
-                android:scrollbars="vertical" />
+                android:scrollbars="vertical"
+                android:layout_below="@id/wc_new_name"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/instructions_str"
+                android:id="@+id/instructions"
+                android:layout_below="@+id/wc_new_desc"
+                android:textSize="19sp"
+                android:gravity="center"
+                android:layout_marginTop="12dp"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_edittext_bottom"
-                android:orientation="horizontal"
-                android:padding="20dp">
+                android:background="@drawable/bg_edittext"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:layout_marginTop="6dp"
+                android:layout_below="@id/instructions"
+                android:id="@+id/icon_bar"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_clean"
+                        android:layout_weight="1"
+                        />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_wifi_black"
+                        android:layout_weight="1"
 
-                <ImageView
-                    android:id="@+id/wc_new_like"
-                    android:layout_width="96px"
-                    android:layout_height="96px"
-                    android:layout_marginStart="10dp"
-                    android:background="@android:color/transparent"
-                    app:srcCompat="@drawable/ic_favorite_border_black_24dp" />
+                        />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_layers_black_24dp"
+                        android:layout_weight="1"
+
+                        />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_odour"
+                        android:layout_weight="1"
+
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:hint="@string/hint_clean_str"
+                        android:id="@+id/new_clean"
+                        android:inputType="number"
+                        android:focusedByDefault="false"
+
+                        />
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_wifi_str"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:id="@+id/new_wifi"
+                        android:inputType="number"
+                        android:focusedByDefault="false"
+
+                        />
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_paper_str"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:id="@+id/new_paper"
+                        android:inputType="number"
+                        android:focusedByDefault="false"
+
+                        />
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_odour_str"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:id="@+id/new_odour"
+                        android:inputType="number"
+                        android:focusedByDefault="false"
+
+                        />
+                </LinearLayout>
+
+
             </LinearLayout>
 
             <Button
                 android:id="@+id/save_wc_btn"
-
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-
+                android:layout_below="@id/icon_bar"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/buttonshape_selector"
                 android:shadowColor="#A8A8A8"
@@ -133,7 +223,7 @@
                 android:textColor="#000000"
                 android:textSize="30sp" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
 
     </LinearLayout>
